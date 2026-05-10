@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Egzamin8 — Quiz z Angielskiego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0F6E56;
+    --green-light: #E1F5EE;
+    --green-dark: #085041;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --gray: #F1EFE8;
+    --text: #1a1a18;
+    --text-muted: #6b6b66;
+    --border: rgba(0,0,0,0.08);
+    --white: #ffffff;
+    --card-bg: #ffffff;
+    --page-bg: #f7f6f1;
+    --pro: #7C3AED;
+    --pro-light: #EDE9FE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--page-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+  .screen { display: none; width: 100%; max-width: 480px; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ── HEADER ── */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px 12px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--green); letter-spacing: -0.5px; }
+  .streak-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--amber-light); color: var(--amber);
+    font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: 20px;
+  }
+  .xp-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--green-light); color: var(--green-dark);
+    font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: 20px;
+  }
+  .pro-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--pro-light); color: var(--pro);
+    font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-row { padding: 10px 20px 0; background: var(--white); }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .progress-bar { height: 5px; background: var(--gray); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s ease; }
+
+  /* ── QUESTION CARD ── */
+  .quiz-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .topic-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-light); color: var(--green-dark);
+    font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px;
+    letter-spacing: 0.3px; text-transform: uppercase; align-self: flex-start;
+  }
+  .question-card {
+    background: var(--white); border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 22px 20px 20px;
+  }
+  .question-num { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+  .question-text {
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 500;
+    line-height: 1.5; color: var(--text);
+  }
+  .gap { color: var(--green); font-weight: 700; border-bottom: 2px solid var(--green); padding-bottom: 1px; }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    font-size: 15px; font-weight: 400; color: var(--text);
+    cursor: pointer; display: flex; align-items: center; gap: 12px;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    text-align: left; width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .option:active { transform: scale(0.98); }
+  .option:hover:not(:disabled) { border-color: var(--green); background: var(--green-light); }
+  .option .opt-letter {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gray); color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .option.correct { border-color: var(--green); background: var(--green-light); }
+  .option.correct .opt-letter { background: var(--green); color: white; }
+  .option.wrong { border-color: var(--red); background: var(--red-light); }
+  .option.wrong .opt-letter { background: var(--red); color: white; }
+  .option:disabled { cursor: default; }
+  .option:disabled:hover { border-color: var(--border); background: var(--white); }
+  .option.correct:disabled:hover { border-color: var(--green); background: var(--green-light); }
+  .option.wrong:disabled:hover { border-color: var(--red); background: var(--red-light); }
+
+  /* ── EXPLANATION ── */
+  .explanation {
+    background: var(--green-light); border-radius: 12px; padding: 14px 16px;
+    font-size: 13px; color: var(--green-dark); line-height: 1.6;
+    border-left: 3px solid var(--green);
+    display: none;
+  }
+  .explanation.show { display: block; }
+
+  /* ── NEXT BUTTON ── */
+  .next-btn {
+    background: var(--green); color: white;
+    border: none; border-radius: 12px; padding: 16px;
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    width: 100%; cursor: pointer; display: none;
+    letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .next-btn:active { transform: scale(0.98); }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--green-dark); }
+
+  /* ── XP POPUP ── */
+  .xp-pop {
+    position: absolute; top: -32px; right: 0;
+    background: var(--green); color: white;
+    font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    opacity: 0; transform: translateY(0);
+    transition: opacity 0.2s, transform 0.5s;
+    pointer-events: none;
+  }
+  .xp-pop.fire { opacity: 1; transform: translateY(-20px); }
+
+  /* ── HOME SCREEN ── */
+  .home-hero {
+    padding: 40px 24px 32px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .home-title {
+    font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+    line-height: 1.15; color: var(--text); margin-bottom: 10px;
+  }
+  .home-title span { color: var(--green); }
+  .home-sub { font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+  .home-stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px; padding: 20px;
+  }
+  .stat-card {
+    background: var(--white); border-radius: 12px;
+    border: 1px solid var(--border); padding: 14px 12px; text-align: center;
+  }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--green); }
+  .stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .topics-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .topic-row {
+    background: var(--white); border-radius: 12px;
+    border: 1px solid var(--border); padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .topic-row:hover { border-color: var(--green); background: var(--green-light); }
+  .topic-row:active { transform: scale(0.99); }
+  .topic-row.locked { opacity: 0.7; }
+  .topic-row.locked:hover { border-color: var(--pro); background: var(--pro-light); }
+  .topic-name { font-size: 14px; font-weight: 500; }
+  .topic-count { font-size: 12px; color: var(--text-muted); }
+  .topic-arrow { color: var(--text-muted); font-size: 18px; }
+  .lock-icon { font-size: 16px; }
+  .free-pill {
+    font-size: 10px; font-weight: 700; background: var(--green-light);
+    color: var(--green-dark); padding: 2px 7px; border-radius: 20px;
+    letter-spacing: 0.3px; text-transform: uppercase;
+  }
+  .start-all-btn {
+    margin: 0 20px 12px;
+    background: var(--green); color: white;
+    border: none; border-radius: 12px; padding: 18px;
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    width: calc(100% - 40px); cursor: pointer;
+    transition: background 0.15s;
+  }
+  .start-all-btn:hover { background: var(--green-dark); }
+  .pro-teaser-btn {
+    margin: 0 20px 32px;
+    background: var(--pro-light); color: var(--pro);
+    border: 1.5px solid var(--pro); border-radius: 12px; padding: 15px;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+    width: calc(100% - 40px); cursor: pointer;
+    transition: background 0.15s;
+    display: none;
+  }
+  .pro-teaser-btn:hover { background: var(--pro); color: white; }
+
+  /* ── RESULTS ── */
+  .results-body {
+    flex: 1; padding: 32px 20px; display: flex;
+    flex-direction: column; align-items: center; gap: 20px; text-align: center;
+  }
+  .result-circle {
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 6px solid var(--green); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .result-pct { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--green); }
+  .result-sub { font-size: 12px; color: var(--text-muted); }
+  .result-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; }
+  .result-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 280px; }
+  .result-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; }
+  .result-stat { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 14px 8px; }
+  .result-stat-num { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
+  .result-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .retry-btn {
+    background: var(--green); color: white; border: none;
+    border-radius: 12px; padding: 16px 32px;
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; width: 100%;
+  }
+  .home-btn {
+    background: var(--white); color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 14px 32px;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 500;
+    cursor: pointer; width: 100%;
+  }
+  .share-text {
+    background: var(--gray); border-radius: 10px; padding: 12px 16px;
+    font-size: 13px; color: var(--text-muted); line-height: 1.5; width: 100%;
+  }
+  .share-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45); z-index: 100;
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--white); border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 480px;
+    max-height: 88vh; overflow-y: auto;
+    padding: 0 0 32px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px; height: 4px; background: var(--border);
+    border-radius: 2px; margin: 14px auto 0;
+  }
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+  .modal-close {
+    background: var(--gray); border: none; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+  }
+  .modal-body { padding: 20px 24px; }
+
+  /* ── ŚCIĄGAWKA CONTENT ── */
+  .sciagawka-intro {
+    background: var(--green-light); border-radius: 12px; padding: 14px 16px;
+    font-size: 13px; color: var(--green-dark); line-height: 1.6;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--green);
+  }
+  .rule-section { margin-bottom: 20px; }
+  .rule-title {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--green-dark); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rule-item {
+    background: var(--gray); border-radius: 10px; padding: 12px 14px;
+    font-size: 13px; line-height: 1.6; margin-bottom: 8px;
+  }
+  .rule-item code {
+    font-family: monospace; background: var(--white);
+    padding: 1px 6px; border-radius: 4px; font-size: 13px;
+    color: var(--green-dark); font-weight: 600;
+  }
+  .rule-trap {
+    background: var(--red-light); border-radius: 10px; padding: 12px 14px;
+    font-size: 13px; line-height: 1.6; margin-bottom: 8px;
+    border-left: 3px solid var(--red); color: var(--red);
+  }
+  .modal-start-btn {
+    margin-top: 8px;
+    background: var(--green); color: white;
+    border: none; border-radius: 12px; padding: 16px;
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    width: 100%; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .modal-start-btn:hover { background: var(--green-dark); }
+
+  /* ── PAYWALL MODAL ── */
+  .paywall-emoji { font-size: 48px; text-align: center; margin: 8px 0 4px; }
+  .paywall-title {
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+    text-align: center; margin-bottom: 8px;
+  }
+  .paywall-sub {
+    font-size: 14px; color: var(--text-muted); text-align: center;
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  .paywall-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .paywall-feature {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--gray); border-radius: 10px; padding: 12px 14px;
+    font-size: 14px;
+  }
+  .paywall-feature-icon { font-size: 20px; flex-shrink: 0; }
+  .paywall-price {
+    background: var(--pro-light); border-radius: 14px; padding: 20px;
+    text-align: center; margin-bottom: 16px;
+  }
+  .paywall-price-main {
+    font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800;
+    color: var(--pro);
+  }
+  .paywall-price-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .paywall-buy-btn {
+    background: var(--pro); color: white;
+    border: none; border-radius: 12px; padding: 17px;
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    width: 100%; cursor: pointer; margin-bottom: 10px;
+    transition: background 0.15s;
+  }
+  .paywall-buy-btn:hover { background: #6D28D9; }
+  .paywall-skip {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 13px; cursor: pointer; width: 100%; padding: 8px;
+    text-decoration: underline;
+  }
+  /* demo unlock bar */
+  .demo-unlock {
+    background: var(--amber-light); border-radius: 10px; padding: 10px 14px;
+    font-size: 12px; color: var(--amber); text-align: center; margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .demo-unlock button {
+    background: var(--amber); color: white; border: none;
+    border-radius: 6px; padding: 4px 10px; font-size: 12px;
+    cursor: pointer; margin-top: 6px; font-weight: 600;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: var(--white); border-top: 1px solid var(--border);
+    display: flex; z-index: 20;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 10px 0 12px; gap: 4px;
+    cursor: pointer; border: none; background: none;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500; transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-tab.active { color: var(--green); }
+  .nav-tab-icon { font-size: 22px; line-height: 1; }
+  .screen.has-nav { padding-bottom: 64px; }
+
+  /* ── ŚCIĄGAWKA SCREEN ── */
+  .sciagawka-screen-hero {
+    padding: 28px 24px 20px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .sciagawka-screen-title {
+    font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .sciagawka-screen-title span { color: var(--green); }
+  .sciagawka-screen-sub { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+  .sciagawka-free-note {
+    margin: 16px 20px 0;
+    background: var(--green-light); border-radius: 12px; padding: 12px 16px;
+    font-size: 13px; color: var(--green-dark); line-height: 1.5;
+    border-left: 3px solid var(--green);
+  }
+  .accordion-list { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .accordion-item {
+    background: var(--white); border-radius: 14px;
+    border: 1.5px solid var(--border);
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .accordion-item.open { border-color: var(--green); }
+  .accordion-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 16px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .accordion-header-left { display: flex; align-items: center; gap: 10px; }
+  .accordion-topic-icon { font-size: 20px; }
+  .accordion-topic-name { font-size: 14px; font-weight: 600; }
+  .accordion-topic-count { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .accordion-chevron {
+    font-size: 18px; color: var(--text-muted);
+    transition: transform 0.25s; display: inline-block;
+  }
+  .accordion-item.open .accordion-chevron { transform: rotate(90deg); color: var(--green); }
+  .accordion-body {
+    display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
+  }
+  .accordion-item.open .accordion-body { display: block; }
+  .accordion-intro {
+    background: var(--green-light); border-radius: 10px; padding: 12px 14px;
+    font-size: 13px; color: var(--green-dark); line-height: 1.6;
+    border-left: 3px solid var(--green); margin: 14px 0 12px;
+  }
+  .acc-rule-title {
+    font-size: 12px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; margin-top: 14px;
+  }
+  .acc-rule-item {
+    background: var(--gray); border-radius: 9px; padding: 10px 12px;
+    font-size: 13px; line-height: 1.6; margin-bottom: 6px;
+  }
+  .acc-rule-item code {
+    font-family: monospace; background: var(--white);
+    padding: 1px 5px; border-radius: 4px; font-size: 12px;
+    color: var(--green-dark); font-weight: 700;
+  }
+  .acc-rule-example {
+    font-size: 12px; color: var(--green-dark); opacity: 0.8; margin-top: 3px;
+  }
+  .acc-trap {
+    background: var(--red-light); border-radius: 9px; padding: 10px 12px;
+    font-size: 13px; line-height: 1.6; margin-bottom: 6px;
+    border-left: 3px solid var(--red); color: var(--red);
+  }
+  .acc-start-btn {
+    margin-top: 14px;
+    background: var(--green); color: white;
+    border: none; border-radius: 10px; padding: 13px;
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    width: 100%; cursor: pointer; transition: background 0.15s;
+  }
+  .acc-start-btn:hover { background: var(--green-dark); }
+  .acc-unlock-btn {
+    margin-top: 14px;
+    background: var(--pro-light); color: var(--pro);
+    border: 1.5px solid var(--pro); border-radius: 10px; padding: 12px;
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    width: 100%; cursor: pointer; transition: background 0.15s;
+  }
+  .acc-unlock-btn:hover { background: var(--pro); color: white; }
+
+  @media (min-width: 500px) {
+    .screen { box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(0,0,0,0.08); min-height: 100vh; }
+    body { padding: 20px 0; background: #eeede8; }
+    .modal-sheet { border-radius: 24px; margin-bottom: 20px; }
+    .modal-overlay { align-items: center; }
+    .bottom-nav { border-radius: 0 0 24px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HOME SCREEN ── -->
+<div class="screen has-nav active" id="screen-home">
+  <div class="top-bar">
+    <div class="logo">Egzamin8</div>
+    <div style="display:flex;gap:8px">
+      <div class="streak-badge" id="home-streak">0 dni</div>
+      <div class="xp-badge" id="home-xp">0 XP</div>
+    </div>
+  </div>
+  <div class="home-hero">
+    <div class="home-title">Angielski na <span>E8</span> w pigułce</div>
+    <div class="home-sub">130 pytań z wyjaśnieniami po polsku. Oparty na arkuszach CKE 2025–2023.</div>
+  </div>
+  <div class="home-stats">
+    <div class="stat-card"><div class="stat-num">130</div><div class="stat-lbl">Pytań</div></div>
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Tematów</div></div>
+    <div class="stat-card"><div class="stat-num" id="home-done">0</div><div class="stat-lbl">Zaliczone</div></div>
+  </div>
+  <div class="topics-list" id="topics-list">
+    <!-- rendered by JS -->
+  </div>
+  <button class="start-all-btn" onclick="startAll()">Losuj wszystkie tematy →</button>
+  <button class="pro-teaser-btn" id="pro-teaser-btn" onclick="openPaywall()">🔒 Odblokuj Egzamin8 Pro — wszystkie tematy</button>
+</div>
+
+<!-- ── QUIZ SCREEN ── -->
+<div class="screen" id="screen-quiz">
+  <div class="top-bar">
+    <button onclick="goHome()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:0">‹</button>
+    <div class="logo">Egzamin8</div>
+    <div style="display:flex;gap:8px">
+      <div class="streak-badge" id="quiz-streak">0 dni</div>
+      <div class="xp-badge" id="quiz-xp">0 XP</div>
+    </div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-info">
+      <span id="progress-label">Pytanie 1 z 10</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="quiz-body">
+    <div class="topic-tag" id="q-topic">Strona bierna</div>
+    <div class="question-card">
+      <div class="question-num" id="q-num">Pytanie 1</div>
+      <div class="question-text" id="q-text"></div>
+    </div>
+    <div class="options" id="options-container"></div>
+    <div class="explanation" id="explanation"></div>
+    <div style="position:relative">
+      <div class="xp-pop" id="xp-pop">+10 XP</div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESULTS SCREEN ── -->
+<div class="screen" id="screen-results">
+  <div class="top-bar">
+    <div class="logo">Egzamin8</div>
+    <div class="xp-badge" id="results-xp">0 XP</div>
+  </div>
+  <div class="results-body">
+    <div class="result-circle">
+      <div class="result-pct" id="res-pct">0%</div>
+      <div class="result-sub" id="res-sub">wynik</div>
+    </div>
+    <div class="result-title" id="res-title">Dobra robota!</div>
+    <div class="result-desc" id="res-desc"></div>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="result-stat-num" id="res-correct" style="color:var(--green)">0</div>
+        <div class="result-stat-lbl">Poprawnie</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" id="res-wrong" style="color:var(--red)">0</div>
+        <div class="result-stat-lbl">Błędnie</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" id="res-xp" style="color:var(--amber)">0</div>
+        <div class="result-stat-lbl">XP zdobyte</div>
+      </div>
+    </div>
+    <div class="share-text" id="share-text"></div>
+    <button class="retry-btn" onclick="retryQuiz()">Spróbuj jeszcze raz →</button>
+    <button class="home-btn" onclick="goHome()">← Wybierz temat</button>
+  </div>
+</div>
+
+<!-- ── ŚCIĄGAWKA MODAL ── -->
+<div class="modal-overlay" id="sciagawka-modal" onclick="closeSciagawka(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="sciagawka-title">📖 Ściągawka</div>
+      <button class="modal-close" onclick="closeSciagawkaBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="sciagawka-body">
+    </div>
+  </div>
+</div>
+
+<!-- ── ŚCIĄGAWKA SCREEN ── -->
+<div class="screen has-nav" id="screen-sciagawka">
+  <div class="top-bar">
+    <div class="logo">Egzamin8</div>
+    <div id="sciagawka-pro-badge" style="display:none" class="pro-badge">✦ PRO</div>
+  </div>
+  <div class="sciagawka-screen-hero">
+    <div class="sciagawka-screen-title">📖 <span>Ściągawka</span></div>
+    <div class="sciagawka-screen-sub">Wszystkie zasady gramatyczne w jednym miejscu. Otwórz temat i ucz się przed ćwiczeniami.</div>
+  </div>
+  <div class="sciagawka-free-note">
+    💡 Ściągawka jest <strong>w pełni darmowa</strong> — wszystkie 12 tematów bez ograniczeń. Ćwiczenia quiz wymagają Pro dla 9 tematów.
+  </div>
+  <div class="accordion-list" id="accordion-list">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-tab active" id="nav-quiz" onclick="switchTab('quiz')">
+    <span class="nav-tab-icon">📝</span>
+    <span>Quiz</span>
+  </button>
+  <button class="nav-tab" id="nav-sciagawka" onclick="switchTab('sciagawka')">
+    <span class="nav-tab-icon">📖</span>
+    <span>Ściągawka</span>
+  </button>
+</nav>
+
+<!-- ── PAYWALL MODAL ── -->
+<div class="modal-overlay" id="paywall-modal" onclick="closePaywall(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">Egzamin8 Pro</div>
+      <button class="modal-close" onclick="closePaywallBtn()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="paywall-emoji">🚀</div>
+      <div class="paywall-title">Odblokuj pełny dostęp</div>
+      <div class="paywall-sub">Darmowa wersja zawiera 3 tematy (35 pytań). Pro odblokowuje wszystko — jednorazowo, na zawsze.</div>
+      <div class="paywall-features">
+        <div class="paywall-feature"><span class="paywall-feature-icon">📚</span><span><strong>Wszystkie 12 tematów</strong> — 130 pytań z arkuszy CKE</span></div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">📖</span><span><strong>Ściągawka gramatyczna</strong> przed każdym tematem</span></div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">📝</span><span><strong>Rozumienie tekstów</strong> — nowy typ zadań z CKE</span></div>
+        <div class="paywall-feature"><span class="paywall-feature-icon">🔥</span><span><strong>Streak i XP</strong> — śledź postępy przez cały rok</span></div>
+      </div>
+      <div class="paywall-price">
+        <div class="paywall-price-main">19 zł</div>
+        <div class="paywall-price-sub">jednorazowo · dostęp na zawsze · bez subskrypcji</div>
+      </div>
+      <!-- DEMO ONLY — replace onclick with real payment provider -->
+      <div class="demo-unlock">
+        <div>Demo: symulacja zakupu (bez prawdziwej płatności)</div>
+        <button onclick="unlockPro()">✓ Odblokuj teraz (demo)</button>
+      </div>
+      <button class="paywall-buy-btn" onclick="unlockPro()">Kup dostęp Pro — 19 zł →</button>
+      <button class="paywall-skip" onclick="closePaywallBtn()">Zostań przy darmowej wersji</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ─── TOPIC DEFINITIONS ───────────────────────────────────────────────────────
+const TOPIC_META = [
+  {
+    key: "Strona bierna",
+    name: "Strona bierna",
+    count: 13, free: true,
+    sciagawka: {
+      intro: "Strona bierna opisuje sytuację, gdy podmiot DOSTAJE akcję zamiast ją wykonywać. Klucz: WAS/WERE (przeszłość) lub IS/ARE (teraźniejszość) + 3. forma czasownika.",
+      sections: [
+        {
+          title: "📐 Budowa strony biernej",
+          rules: [
+            { text: "Teraźniejszość: <code>is/are + past participle</code>", example: "The robot IS CONTROLLED by a computer." },
+            { text: "Przeszłość: <code>was/were + past participle</code>", example: "The ship WAS LIFTED out of the sea." },
+            { text: "Przyszłość: <code>will be + past participle</code>", example: "Items WILL BE GIVEN to charity." },
+          ],
+          traps: [
+            "❌ 'was lifting' to strona czynna ciągła — NIE bierna!",
+            "❌ Przysłówek stoi MIĘDZY is/are/was a imiesłowem: ARE often PUT (nie: often are put)",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Gerund/Inf.",
+    name: "Gerund i bezokolicznik",
+    count: 12, free: true,
+    sciagawka: {
+      intro: "Gerund (-ing) stosuje się po przyimkach i niektórych czasownikach. Bezokolicznik (to + verb) po innych czasownikach. Najlepiej nauczyć się list!",
+      sections: [
+        {
+          title: "🔧 Gerund (-ing)",
+          rules: [
+            { text: "Po przyimkach ZAWSZE gerund:", example: "good AT catching · afraid OF losing · instead OF walking" },
+            { text: "Po tych czasownikach → gerund:", example: "love · enjoy · keep · stop · finish · mind · consider" },
+          ],
+          traps: []
+        },
+        {
+          title: "🎯 Bezokolicznik (to + verb)",
+          rules: [
+            { text: "Po tych czasownikach → bezokolicznik:", example: "decide TO go · refuse TO give · manage TO save · want TO do" },
+          ],
+          traps: [
+            "❌ WOULD YOU MIND + -ing (nie to): 'Would you mind OPENING the window?'",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Modalne",
+    name: "Czasowniki modalne",
+    count: 10, free: true,
+    sciagawka: {
+      intro: "Czasowniki modalne wyrażają możliwość, obowiązek, zakaz i radę. Największa pułapka: MUSTN'T vs. DON'T HAVE TO — to zupełnie różne znaczenia!",
+      sections: [
+        {
+          title: "⚠️ Najważniejsza różnica",
+          rules: [
+            { text: "<code>mustn't</code> = ZAKAZ (nie wolno ci)", example: "You MUSTN'T feed the animals." },
+            { text: "<code>don't have to</code> = BRAK OBOWIĄZKU (nie musisz, ale możesz)", example: "You DON'T HAVE TO get up early today." },
+          ],
+          traps: ["❌ 'You mustn't hurry' ≠ 'You don't have to hurry' — pierwsze to zakaz, drugie to brak przymusu!"]
+        },
+        {
+          title: "🗂️ Pozostałe modalne",
+          rules: [
+            { text: "<code>should</code> = rada", example: "You SHOULD wait for the owner." },
+            { text: "<code>could</code> = grzeczna prośba / zdolność w przeszłości", example: "COULD I have some water? / She COULD smell them from far away." },
+            { text: "<code>must</code> = logiczny wniosek (dedukcja)", example: "He MUST be a doctor — he knows so much!" },
+            { text: "<code>can't</code> = niemożliwe (zaprzeczenie dedukcji)", example: "She CAN'T be feeling well — she looks pale." },
+          ],
+          traps: []
+        }
+      ]
+    }
+  },
+  {
+    key: "Przyimki",
+    name: "Przyimki",
+    count: 12, free: false,
+    sciagawka: {
+      intro: "Przyimki w języku angielskim często nie odpowiadają polskim. Najlepiej uczyć się ich w gotowych zwrotach (collocations).",
+      sections: [
+        {
+          title: "📌 Kluczowe zwroty z przyimkami",
+          rules: [
+            { text: "<code>for</code> + czas trwania", example: "for 400 years · for 15 minutes · for 3 weeks" },
+            { text: "<code>on</code> + środki przekazu / scena", example: "on television · on the radio · on stage · on business" },
+            { text: "<code>at</code> + konkretne miejsca/adresy", example: "at the palace · at the station · at school" },
+            { text: "<code>known as</code> / <code>afraid of</code> / <code>good at</code>", example: "known AS · afraid OF · good AT · dream ABOUT" },
+            { text: "<code>out of business</code>", example: "The shop went OUT OF business." },
+            { text: "<code>instead of</code> + -ing", example: "instead OF walking · instead OF waiting" },
+          ],
+          traps: [
+            "❌ 'dream of' (marzyć że) vs. 'dream about' (myśleć o) — oba istnieją, ale różne znaczenie",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Stopniowanie",
+    name: "Stopniowanie przymiotników",
+    count: 15, free: false,
+    sciagawka: {
+      intro: "Przymiotniki krótkie (1 sylaba) stopniujemy przez -er/-est. Długie — przez more/most. Kilka wyjątków trzeba zapamiętać.",
+      sections: [
+        {
+          title: "📊 Zasady",
+          rules: [
+            { text: "Krótkie: <code>-er / -est</code>", example: "fast → faster → the fastest · big → bigger → the biggest" },
+            { text: "Długie: <code>more / most</code>", example: "difficult → more difficult → the most difficult" },
+            { text: "Wzmocnienie stopnia wyższego: <code>much / far</code>", example: "MUCH better · FAR cheaper" },
+            { text: "Konstrukcja <code>the more... the better</code>", example: "The more you practise, THE BETTER you become." },
+            { text: "<code>too</code> + przymiotnik / przymiotnik + <code>enough</code>", example: "TOO early · long ENOUGH (enough po przymiotniku!)" },
+            { text: "far → <code>farther</code> (odległość) / <code>further</code> (przenośnie)", example: "" },
+          ],
+          traps: [
+            "❌ 'very bigger' — nie istnieje! Używaj MUCH bigger",
+            "❌ 'more fast' — krótkie przymiotniki nie biorą more",
+            "❌ 'enough long' — ZAWSZE: przymiotnik + enough",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Czas przyszły",
+    name: "Czasy przyszłe",
+    count: 14, free: false,
+    sciagawka: {
+      intro: "W angielskim są dwa główne sposoby na wyrażenie przyszłości. Klucz: czy decyzja/plan były wcześniej, czy właśnie teraz?",
+      sections: [
+        {
+          title: "📅 GOING TO vs. WILL",
+          rules: [
+            { text: "<code>going to</code> = wcześniejszy plan / dowód wizualny", example: "Look at those clouds — it's GOING TO rain. (widzę chmury!)" },
+            { text: "<code>will</code> = spontaniczna decyzja / opinia / obietnica", example: "I think she WILL be a great doctor. / I promise I WILL call you." },
+          ],
+          traps: [
+            "❌ Po 'I think / I believe' → WILL (nie going to)",
+            "❌ Schemat pytania: ARE you GOING TO visit...? (nie 'Do you going to')",
+            "❌ Przyszła strona bierna: WILL BE + past participle",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Zdania wzgl.",
+    name: "Zdania względne",
+    count: 11, free: false,
+    sciagawka: {
+      intro: "Zaimki względne łączą dwa zdania. Wybór zależy od tego, czy opisujesz osobę, rzecz, miejsce, czas, powód, czy relację dzierżawczą.",
+      sections: [
+        {
+          title: "🔗 Który zaimek kiedy?",
+          rules: [
+            { text: "<code>who</code> = osoby", example: "The people WHO worked there knew Bear." },
+            { text: "<code>which</code> = rzeczy / zwierzęta", example: "The cheese WHICH listened to hip-hop tasted best." },
+            { text: "<code>where</code> = miejsca", example: "A stationery shop WHERE you buy pens." },
+            { text: "<code>whose</code> = dzierżawczość", example: "The girl WHOSE father bought her a wallet." },
+            { text: "<code>why</code> = powód (po 'reason')", example: "The reason WHY flamingos stand on one leg." },
+            { text: "<code>when</code> = czas (po 'time/day/year')", example: "The year WHEN he was born." },
+          ],
+          traps: [
+            "❌ 'on which' — przyimek MUSI zostać: the ship ON WHICH Drake sailed",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Zwroty",
+    name: "Zwroty i reakcje",
+    count: 15, free: false,
+    sciagawka: {
+      intro: "Zadanie 5 i 6 egzaminu to reakcje na sytuacje i uzupełnianie dialogów. Ćwicz gotowe zwroty — często powtarzają się z arkusza na arkusz.",
+      sections: [
+        {
+          title: "💬 Najczęstsze zwroty",
+          rules: [
+            { text: "Prośba o opinię:", example: "Which do you think is the best?" },
+            { text: "Prośba o powtórzenie:", example: "Could you say that again?" },
+            { text: "Grzeczna prośba:", example: "Could you do something for me? / Could I have a look at that?" },
+            { text: "Sugestia:", example: "How about going...? / Why don't we...? / Sounds like fun!" },
+            { text: "Preferencja:", example: "I'd prefer to go... (I'd = I would — bardziej grzeczne niż I prefer)" },
+            { text: "Rada:", example: "You should wait for its owner to call." },
+            { text: "Pytanie o pozwolenie:", example: "Are dogs allowed in the hotel? / Can I go out now?" },
+          ],
+          traps: [
+            "❌ HOW ABOUT + -ing (nie to): 'How about GOING?' nie 'How about to go?'",
+            "❌ WHY DON'T WE + bezokolicznik bez to: 'Why don't we GO?' nie 'Why don't we to go?'",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Pytania",
+    name: "Pytania i luki",
+    count: 2, free: false,
+    sciagawka: {
+      intro: "Pytania HOW (how often, how long, how much, how many) i prośby o pozwolenie (can I) — warto znać różnicę.",
+      sections: [
+        {
+          title: "❓ HOW + przysłówek",
+          rules: [
+            { text: "<code>how often</code> = jak często (odpowiedź: twice a week, every day)", example: "HOW OFTEN do you go to dance classes?" },
+            { text: "<code>how long</code> = jak długo (odpowiedź: for 2 hours)", example: "HOW LONG does it take?" },
+            { text: "<code>how many</code> = ile (policzalny)", example: "HOW MANY students are there?" },
+            { text: "<code>how much</code> = ile (niepoliczalny / cena)", example: "HOW MUCH does it cost?" },
+          ],
+          traps: []
+        }
+      ]
+    }
+  },
+  {
+    key: "Słownictwo",
+    name: "Słownictwo",
+    count: 12, free: false,
+    sciagawka: {
+      intro: "Zadania na słownictwo testują znajomość konkretnych wyrazów w kontekście. Zwróć uwagę na kolokacje (wyrazy, które chodzą razem).",
+      sections: [
+        {
+          title: "🔤 Przydatne kolokacje z arkuszy CKE",
+          rules: [
+            { text: "<code>put on</code> = założyć (ubranie)", example: "They PUT ON Spider-Man costumes." },
+            { text: "<code>fit</code> = sprawny fizycznie", example: "Everyone who is FIT enough can do Everesting." },
+            { text: "<code>allowed</code> = dozwolony (strona bierna)", example: "Only three breaks ARE ALLOWED." },
+            { text: "<code>every</code> + singular noun = za każdym razem", example: "EVERY time you go up the hill." },
+            { text: "<code>comfortable</code> = wygodny / komfortowy", example: "Working in a black costume wasn't COMFORTABLE." },
+          ],
+          traps: [
+            "❌ 'colours' (l. mn.) nie 'colour's' (dzierżawcze)!",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Zdania warunk.",
+    name: "Zdania warunkowe",
+    count: 3, free: false,
+    sciagawka: {
+      intro: "Na egzaminie E8 pojawia się głównie zerowy i pierwszy okres warunkowy. Pamiętaj: po IF nie używamy WILL!",
+      sections: [
+        {
+          title: "🔀 Okres warunkowy I",
+          rules: [
+            { text: "Schemat: <code>If + present simple, will + verb</code>", example: "If you don't take an umbrella, you'll get wet." },
+            { text: "Zamiana: <code>nothing → not anything</code>", example: "There's nothing → We don't have ANYTHING." },
+            { text: "Zamiana: <code>close to → not far from</code>", example: "The bookshop is NOT FAR FROM my house." },
+          ],
+          traps: [
+            "❌ 'If you won't take...' — po IF nie używamy WILL!",
+          ]
+        }
+      ]
+    }
+  },
+  {
+    key: "Czytanie",
+    name: "Rozumienie tekstów",
+    count: 11, free: false,
+    sciagawka: {
+      intro: "Czytanie ze zrozumieniem: zawsze wróć do tekstu! Odpowiedź musi wynikać wprost z treści — nie z Twojej wiedzy ogólnej.",
+      sections: [
+        {
+          title: "📄 Strategia na zadania czytania",
+          rules: [
+            { text: "Zadanie 7 (krótkie teksty): przeczytaj PYTANIE, potem szukaj odpowiedzi w tekście", example: "" },
+            { text: "Zadanie 8 (wstawianie zdań): sprawdź słowa łączące (But, Also, What is more, For example)", example: "" },
+            { text: "Zadanie 9 (dopasowanie): czytaj najpierw pytania, potem teksty A/B/C", example: "" },
+          ],
+          traps: [
+            "❌ Nie odpowiadaj na podstawie własnej wiedzy — liczy się tylko treść tekstu",
+            "❌ Uważaj na pułapki: tekst może mówić coś PRZECIWNEGO do pozornie oczywistej odpowiedzi",
+          ]
+        }
+      ]
+    }
+  },
+];
+
+// Free topics by key (first 3)
+const FREE_TOPIC_KEYS = new Set(TOPIC_META.filter(t => t.free).map(t => t.key));
+const ALL_TOPIC_KEYS  = TOPIC_META.map(t => t.key);
+
+
+const QUESTIONS = [
+  {t:"Strona bierna",q:"The ship _____ out of the sea in 1982 by a special machine.",o:["A. lifted","B. was lifted","C. has lifted","D. lifts"],c:1,e:"Strona bierna: WAS/WERE + 3. forma. Statek ZOSTAŁ wyciągnięty — to ON dostał akcję."},
+  {t:"Strona bierna",q:"Professional tasters _____ to try a piece of each cheese.",o:["A. invited","B. were inviting","C. were invited","D. have invited"],c:2,e:"Przeszła strona bierna: WERE + invited. Degustatorzy dostali zaproszenie."},
+  {t:"Strona bierna",q:"Flippy _____ by cameras and a special computer program.",o:["A. controls","B. is controlling","C. is controlled","D. controlled"],c:2,e:"Teraźniejsza strona bierna: IS + controlled. Robot jest sterowany przez coś."},
+  {t:"Strona bierna",q:"The deck _____ by fire, but most of the structure was saved.",o:["A. damaged","B. was damaged","C. has damaged","D. was damaging"],c:1,e:"Przeszła strona bierna: WAS + damaged. Pokład doznał uszkodzenia."},
+  {t:"Strona bierna",q:"Any items remaining after Thursday _____ to a charity shop.",o:["A. will give","B. are giving","C. will be given","D. give"],c:2,e:"Przyszła strona bierna: WILL BE + given. Rzeczy zostaną oddane."},
+  {t:"Strona bierna",q:"The stamps _____ on display at international exhibitions.",o:["A. often put","B. are often put","C. often are put","D. puts often"],c:1,e:"Strona bierna z przysłówkiem: ARE + often + put. Przysłówek stoi MIĘDZY are a imiesłowem."},
+  {t:"Strona bierna",q:"The play _____ on a stage built inside a real railway station.",o:["A. performs","B. is performed","C. performed","D. was performing"],c:1,e:"Teraźniejsza strona bierna: IS + performed. Sztuka jest wystawiana (ciągle)."},
+  {t:"Strona bierna",q:"Skates _____ as a means of transport in northern Europe 5,000 years ago.",o:["A. used","B. were used","C. were using","D. have used"],c:1,e:"Przeszła strona bierna: WERE + used. Łyżwy były używane jako transport."},
+  {t:"Strona bierna",q:"It _____ now known as the Royal Philatelic Collection.",o:["A. knows","B. is known","C. has known","D. was knowing"],c:1,e:"Teraźniejsza strona bierna: IS + known. Znana jest pod tą nazwą teraz."},
+  {t:"Strona bierna",q:"The food _____ by my host family was absolutely delicious.",o:["A. cook","B. cooking","C. cooked","D. was cooked"],c:2,e:"Imiesłów bierny jako przydawka: food cooked by = jedzenie ugotowane przez. Bez BE."},
+  {t:"Gerund/Inf.",q:"This is a way of _____ lovely pictures from strips of paper.",o:["A. create","B. created","C. to create","D. creating"],c:3,e:"Gerund po przyimku 'of': way OF + -ing. Po KAŻDYM przyimku → -ing."},
+  {t:"Gerund/Inf.",q:"She's really good at _____ footballs with her front paws.",o:["A. catch","B. catching","C. to catch","D. caught"],c:1,e:"Gerund po 'good at': be good AT + -ing. Przymiotnik + przyimek = gerund."},
+  {t:"Gerund/Inf.",q:"They are simply afraid of _____ their jobs because of the robot.",o:["A. lose","B. to lose","C. losing","D. lost"],c:2,e:"Gerund po 'afraid of': przyimek OF zawsze wymaga -ing."},
+  {t:"Gerund/Inf.",q:"People could move instead of _____ around the frozen lakes.",o:["A. walk","B. walking","C. to walk","D. walked"],c:1,e:"Gerund po 'instead of': złożony przyimek INSTEAD OF + -ing."},
+  {t:"Gerund/Inf.",q:"Henry VII loved _____ tennis and played it all his life.",o:["A. to play","B. played","C. play","D. playing"],c:3,e:"Gerund po 'love': LOVE/ENJOY/KEEP/STOP/FINISH + -ing. Zawsze!"},
+  {t:"Gerund/Inf.",q:"I decided _____ a recipe for a toasted sandwich to the competition.",o:["A. sending","B. to send","C. send","D. sent"],c:1,e:"Bezokolicznik po 'decide': DECIDE TO + verb. Zawsze TO."},
+  {t:"Gerund/Inf.",q:"Edward refused _____ up his hobby despite his father's wishes.",o:["A. to give","B. giving","C. give","D. given"],c:0,e:"Bezokolicznik po 'refuse': REFUSE TO + verb. Nie gerund!"},
+  {t:"Gerund/Inf.",q:"The brave dog managed _____ the lives of more than 100 koalas.",o:["A. saving","B. save","C. to save","D. saved"],c:2,e:"Bezokolicznik po 'manage': MANAGE TO + verb = udało się (coś zrobić)."},
+  {t:"Gerund/Inf.",q:"I kept _____ about my mum's shepherd's pie the whole trip.",o:["A. dream","B. dreamed","C. to dream","D. dreaming"],c:3,e:"Gerund po 'keep': KEEP + -ing = ciągle coś robić."},
+  {t:"Gerund/Inf.",q:"Would you mind _____ the window? It's very hot in here.",o:["A. open","B. to open","C. opening","D. opened"],c:2,e:"Gerund po 'mind': WOULD YOU MIND + -ing? = Czy miałbyś coś przeciwko...?"},
+  {t:"Modalne",q:"Slow down — we _____ hurry. There's plenty of time.",o:["A. mustn't","B. can't","C. don't have to","D. shouldn't"],c:2,e:"DON'T HAVE TO = brak obowiązku (nie trzeba). MUSTN'T = zakaz. Ogromna różnica!"},
+  {t:"Modalne",q:"You definitely _____ go climbing in this weather. It's dangerous.",o:["A. don't have to","B. shouldn't","C. couldn't","D. needn't"],c:1,e:"SHOULDN'T = rada negatywna (nie powinieneś). DON'T HAVE TO = nie musisz."},
+  {t:"Modalne",q:"_____ I have some water, please? I'm very thirsty.",o:["A. Should","B. Would","C. Could","D. Shall"],c:2,e:"COULD I = grzeczna prośba. Bardziej uprzejme niż CAN I."},
+  {t:"Modalne",q:"Why _____ we make a cake together this afternoon?",o:["A. don't","B. won't","C. can't","D. shouldn't"],c:0,e:"WHY DON'T WE = stały zwrot do wyrażania sugestii. Zawsze 'don't'."},
+  {t:"Modalne",q:"We _____ get up early this week because it is the winter break.",o:["A. mustn't","B. couldn't","C. don't have to","D. shouldn't"],c:2,e:"DON'T HAVE TO = nie musimy (ferie = brak obowiązku). Nie MUSTN'T (zakaz)."},
+  {t:"Modalne",q:"You _____ feed the animals in the zoo — it says so on the sign.",o:["A. don't have to","B. mustn't","C. couldn't","D. shouldn't"],c:1,e:"MUSTN'T = zakaz (jest znak zabraniający). Nie mylić z don't have to."},
+  {t:"Modalne",q:"He _____ be a doctor — he knows so much about medicine!",o:["A. must","B. should","C. can","D. will"],c:0,e:"MUST = logiczny wniosek (na pewno jest). Dedukcja z dostępnych dowodów."},
+  {t:"Modalne",q:"She _____ smell koalas from a long distance — she was a perfect rescue dog.",o:["A. would","B. could","C. should","D. must"],c:1,e:"COULD = zdolność w przeszłości (umiała, potrafiła). CAN = teraźniejszość."},
+  {t:"Modalne",q:"She looks pale. She _____ be feeling well today.",o:["A. can't","B. mustn't","C. shouldn't","D. needn't"],c:0,e:"CAN'T = logiczne zaprzeczenie (niemożliwe). She can't be well = na pewno jest chora."},
+  {t:"Modalne",q:"_____ you at least help me choose a present for him?",o:["A. Will","B. Shall","C. Could","D. Must"],c:2,e:"COULD YOU = grzeczna prośba. Bardziej uprzejme niż WILL YOU lub CAN YOU."},
+  {t:"Przyimki",q:"The ship lay underwater _____ over 400 years.",o:["A. since","B. during","C. for","D. by"],c:2,e:"FOR + czas trwania: for 400 years, for 3 weeks, for 15 minutes. Jak długo?"},
+  {t:"Przyimki",q:"The stamp collection is kept _____ St James's Palace in London.",o:["A. in","B. at","C. on","D. by"],c:1,e:"AT + konkretne miejsce/adres. IN = wewnątrz pomieszczenia. Pałace → AT."},
+  {t:"Przyimki",q:"Calico is going out _____ business because the shopping centre opened.",o:["A. from","B. of","C. with","D. in"],c:1,e:"OUT OF BUSINESS = stały zwrot (firma przestała działać)."},
+  {t:"Przyimki",q:"The play is performed _____ a stage inside a real railway station.",o:["A. at","B. in","C. on","D. by"],c:2,e:"ON STAGE = stały zwrot. Przedstawienia odbywają się ON stage."},
+  {t:"Przyimki",q:"She had been dreaming _____ her mum's shepherd's pie the whole trip.",o:["A. for","B. of","C. about","D. at"],c:2,e:"DREAM ABOUT = myśleć o czymś, marzyć o czymś. Dream OF = marzyć że."},
+  {t:"Przyimki",q:"The competition was watched live _____ television by millions.",o:["A. at","B. on","C. in","D. by"],c:1,e:"ON television = na ekranie. Tak samo: on the radio, on the internet."},
+  {t:"Przyimki",q:"They are simply afraid _____ losing their jobs because of the robot.",o:["A. about","B. of","C. from","D. at"],c:1,e:"AFRAID OF = stały zwrot. Po przymiotniku + OF zawsze gerund."},
+  {t:"Przyimki",q:"People moved instead _____ walking around the frozen lakes.",o:["A. of","B. from","C. to","D. for"],c:0,e:"INSTEAD OF = stały zwrot przyimkowy. Zawsze OF + gerund po 'instead'."},
+  {t:"Przyimki",q:"She practises _____ 15 minutes every afternoon — not longer.",o:["A. during","B. since","C. for","D. until"],c:2,e:"FOR + czas trwania: practises for 15 minutes. Jak długo ćwiczy?"},
+  {t:"Przyimki",q:"It was originally known _____ the Pelican, but Drake renamed it.",o:["A. like","B. as","C. for","D. by"],c:1,e:"KNOWN AS = znany jako. Stały zwrot. Nie 'known like'."},
+  {t:"Stopniowanie",q:"The weather in Italy is _____ better than in England.",o:["A. very","B. much","C. so","D. too"],c:1,e:"MUCH + stopień wyższy = wzmocnienie: much better, much faster, much bigger."},
+  {t:"Stopniowanie",q:"Flamingos use _____ energy on one leg than they do on two.",o:["A. fewer","B. more","C. less","D. least"],c:2,e:"LESS + rzeczownik niepoliczalny (energy). FEWER + policzalny (students, books)."},
+  {t:"Stopniowanie",q:"These trousers are not long _____ for me. Can I try another pair?",o:["A. enough","B. too","C. very","D. quite"],c:0,e:"Przymiotnik + ENOUGH. NOT long enough = za krótkie. Przymiotnik PRZED enough."},
+  {t:"Stopniowanie",q:"No, 2:30 is _____ early for me. I have lessons until 3:00.",o:["A. very","B. enough","C. quite","D. too"],c:3,e:"TOO + przymiotnik = za bardzo. Too early = za wcześnie. TOO + przymiotnik."},
+  {t:"Stopniowanie",q:"The Cutty Sark was _____ sailing ship of its time.",o:["A. fast","B. faster","C. the fastest","D. most fast"],c:2,e:"THE FASTEST = stopień najwyższy z 'the'. Fast → faster → the fastest."},
+  {t:"Stopniowanie",q:"My old flat was _____ bigger than this one.",o:["A. very","B. much","C. so","D. more"],c:1,e:"MUCH + stopień wyższy: much bigger = o wiele większy. 'Very bigger' to błąd."},
+  {t:"Stopniowanie",q:"She is _____ student in the class — everyone asks her for help.",o:["A. the most clever","B. clever","C. cleverer","D. the cleverest"],c:3,e:"THE CLEVEREST = stopień najwyższy. Krótkie przymiotniki: -er/-est, nie more/most."},
+  {t:"Stopniowanie",q:"The more you practise, _____ you become.",o:["A. the best","B. better","C. the better","D. most good"],c:2,e:"THE MORE... THE BETTER = im więcej... tym lepiej. Stała struktura."},
+  {t:"Stopniowanie",q:"This quiz is _____ the ones we did in class.",o:["A. more difficult than","B. more difficult as","C. most difficult than","D. difficult than"],c:0,e:"MORE + długie przymiotniki + THAN. Nie 'as' po comparative."},
+  {t:"Stopniowanie",q:"The new shopping centre is _____ from the city centre than the old café.",o:["A. far","B. farthest","C. farther","D. the far"],c:2,e:"FARTHER = stopień wyższy od 'far' (odległość). Further = bardziej (w przenośni)."},
+  {t:"Czas przyszły",q:"How is Jack _____ get to school tomorrow?",o:["A. going to","B. will","C. going","D. about to"],c:0,e:"GOING TO + plan: pytamy o wcześniej zaplanowany sposób dotarcia."},
+  {t:"Czas przyszły",q:"After the match, they are _____ have lunch at a nearby restaurant.",o:["A. going","B. will","C. going to","D. about"],c:2,e:"GOING TO + plan ustalony wcześniej: are going to have = mają zamiar zjeść."},
+  {t:"Czas przyszły",q:"Look at those clouds! It _____ rain soon.",o:["A. will","B. is going to","C. rains","D. rained"],c:1,e:"GOING TO + dowód wizualny: widzisz chmury, przewidujesz deszcz. Nie WILL."},
+  {t:"Czas przyszły",q:"I think she _____ a great doctor one day.",o:["A. is going to be","B. will be","C. is being","D. was"],c:1,e:"WILL + opinia/przewidywanie: po 'I think' = WILL, nie going to."},
+  {t:"Czas przyszły",q:"The robot _____ definitely speed up service but workers are worried.",o:["A. is going to","B. will definitely","C. definitely going","D. has definitely"],c:1,e:"WILL + przewidywanie. Przysłówek stoi MIĘDZY will a czasownikiem."},
+  {t:"Czas przyszły",q:"I'm going _____ at a tournament with my team on Saturday.",o:["A. be","B. to be","C. being","D. been"],c:1,e:"GOING TO + bezokolicznik: I'm going TO BE. Konstrukcja: going TO + base verb."},
+  {t:"Czas przyszły",q:"She _____ start her new job on Monday — she's very excited.",o:["A. will","B. is going to","C. goes to","D. shall"],c:1,e:"GOING TO + plan z zamierzeniem: wcześniej zaplanowane, że zacznie w poniedziałek."},
+  {t:"Czas przyszły",q:"Any items remaining after Thursday _____ given away to charity.",o:["A. will","B. will be","C. are going","D. going to be"],c:1,e:"Przyszła strona bierna: WILL BE + past participle."},
+  {t:"Czas przyszły",q:"I promise I _____ you as soon as the results are announced.",o:["A. am calling","B. call","C. will call","D. going to call"],c:2,e:"WILL = spontaniczna decyzja / obietnica (właśnie postanowiłem/am)."},
+  {t:"Czas przyszły",q:"What is the girl _____ do now? She looks bored in the car.",o:["A. going","B. going to","C. will","D. about"],c:1,e:"GOING TO w pytaniu: What IS she GOING TO do? Schemat: is/are + going to + verb."},
+  {t:"Zdania wzgl.",q:"They started looking for a place _____ he would be happy.",o:["A. which","B. who","C. where","D. when"],c:2,e:"WHERE = zdanie względne miejsca. Place WHERE = miejsce, gdzie."},
+  {t:"Zdania wzgl.",q:"A police officer stopped a car _____ was moving too slowly.",o:["A. who","B. where","C. when","D. which"],c:3,e:"WHICH = zdanie względne dla rzeczy (car). WHO = tylko dla ludzi."},
+  {t:"Zdania wzgl.",q:"The Golden Hinde was the ship _____ Sir Francis Drake sailed around the world.",o:["A. which","B. on which","C. where","D. who"],c:1,e:"ON WHICH: Drake sailed ON the ship. Przyimek musi pozostać w zdaniu!"},
+  {t:"Zdania wzgl.",q:"A stationery shop _____ you buy your exercise books and pens for school.",o:["A. which","B. who","C. where","D. that"],c:2,e:"WHERE = zdanie względne miejsca. Sklep jest miejscem → WHERE."},
+  {t:"Zdania wzgl.",q:"The cheese _____ had listened to hip-hop music tasted the best.",o:["A. who","B. which","C. where","D. whom"],c:1,e:"WHICH = zdanie względne dla rzeczy (cheese). Nie WHO."},
+  {t:"Zdania wzgl.",q:"The people _____ worked there immediately knew Bear was a great rescue dog.",o:["A. which","B. where","C. who","D. whom"],c:2,e:"WHO = zdanie względne dla ludzi. The people WHO worked = ludzie, którzy pracowali."},
+  {t:"Zdania wzgl.",q:"The reason _____ flamingos do this is simple: they save energy.",o:["A. which","B. that","C. where","D. why"],c:3,e:"WHY = zdanie względne przyczyny po słowie 'reason'."},
+  {t:"Zdania wzgl.",q:"That is the museum _____ the ship has been kept for 40 years.",o:["A. which","B. who","C. where","D. whose"],c:2,e:"WHERE = zdanie względne miejsca. Muzeum jest miejscem → WHERE."},
+  {t:"Zdania wzgl.",q:"She is the girl _____ father bought her a red wallet in China.",o:["A. who","B. which","C. whose","D. whom"],c:2,e:"WHOSE = dzierżawcze zdanie względne. The girl WHOSE father = dziewczyna, której ojciec."},
+  {t:"Zdania wzgl.",q:"The volunteer _____ delivered books to elderly people won an award.",o:["A. which","B. whose","C. who","D. where"],c:2,e:"WHO = zdanie względne dla osoby (volunteer). The volunteer WHO delivered."},
+
+  // ── 2024 MAY PAPER ─────────────────────────────────────────────────────
+  // Task 5 — situational responses (grammar embedded in options)
+  {t:"Zwroty",q:"Spotykasz dawno niewidzianą koleżankę. Co jej powiesz?",o:["A. It's been a long time since I last saw you.","B. I'm sure we haven't met before.","C. It was nice to see you last weekend."],c:0,e:"IT'S BEEN + czas trwania: 'It's been a long time' = minęło dużo czasu. Używamy present perfect dla czasu, który trwa do teraz."},
+  {t:"Zwroty",q:"Chcesz obejrzeć torbę w sklepie. Co powiesz do sprzedawcy?",o:["A. Will you carry that bag for me?","B. Would you like to have that bag?","C. Could I have a look at that bag?"],c:2,e:"COULD I = grzeczna prośba (czy mogę...?). 'Have a look at' = zobaczyć, obejrzeć. Najbardziej uprzejma forma prośby w sklepie."},
+  {t:"Zwroty",q:"Pytasz kolegę, o której godzinie macie się spotkać. Co powiesz?",o:["A. What time are we meeting?","B. How much time do we have for our meeting?","C. How many meetings were there?"],c:0,e:"WHAT TIME + present continuous = pytanie o zaplanowane spotkanie. 'Are we meeting' = kiedy się spotykamy (plan). HOW MUCH pyta o ilość, nie o godzinę."},
+  {t:"Zwroty",q:"Kolega proponuje Ci wyjazd na narty. Jego pomysł Ci się podoba. Co mu powiesz?",o:["A. Do you like my idea?","B. I'm feeling well, thanks.","C. Sounds like fun!"],c:2,e:"SOUNDS LIKE FUN = stały zwrot wyrażający entuzjazm (Brzmi świetnie!). Gramatycznie: sounds + like + noun. Nie mówi się 'Sounds like a fun'."},
+  // Task 6 — gap fill (how often + can I go)
+  {t:"Pytania",q:"Mark, _____ (how) do you go to dance classes? — Twice a week.",o:["A. how many times","B. how often","C. how long","D. how much"],c:1,e:"HOW OFTEN = jak często (pytanie o częstotliwość). Odpowiedź 'Twice a week' = dwa razy w tygodniu. HOW MANY TIMES = ile razy (konkretna liczba), HOW LONG = jak długo."},
+  {t:"Pytania",q:"Mum, I've finished tidying up my room. _____ (go) out now?",o:["A. Can I go","B. I can go","C. Am I going","D. Do I go"],c:0,e:"CAN I + verb = prośba o pozwolenie (czy mogę wyjść?). Present perfect 'I've finished' = właśnie skończyłem. Odpowiedź 'OK' potwierdza, że to prośba o pozwolenie."},
+  // Task 11 — word choice (put on, stopped, comfortable)
+  {t:"Słownictwo",q:"They _____ on Spider-Man and Batman costumes and prepared their equipment.",o:["A. bought","B. made","C. put","D. stopped"],c:2,e:"PUT ON = założyć (ubranie, kostium). Stały zwrot: put ON a costume / put ON clothes. Nie 'wear on' ani 'dress on'."},
+  {t:"Słownictwo",q:"The superheroes _____ when the children on the sixth floor started clapping happily.",o:["A. bought","B. stopped","C. made","D. put"],c:1,e:"STOPPED = zatrzymali się (past simple od 'stop'). Kontekst: zaczęli schodzić, a potem zatrzymali się kiedy dzieci zaczęły klaskać."},
+  {t:"Słownictwo",q:"Working in a black costume wasn't _____, but the kids' smiling faces made it worth it.",o:["A. ready","B. stopped","C. comfortable","D. made"],c:2,e:"COMFORTABLE = wygodny/komfortowy. Praca w czarnym kostiumie w upale była niewygodna. wasn't comfortable = nie było wygodnie."},
+  // Task 12 — grammar gap fill (going to, passive, from)
+  {t:"Strona bierna",q:"I'm not _____ to build a time machine, but I found a fun day online.",o:["A. making","B. doing","C. going","D. having"],c:2,e:"BE GOING TO + verb = zamierzać coś zrobić. 'I'm not going TO build' = nie zamierzam budować. NOT going TO = zamiar negatywny."},
+  {t:"Strona bierna",q:"The day _____ on 8th December. So it will be next Sunday.",o:["A. has celebrated","B. is celebrating","C. is celebrated","D. celebrates"],c:2,e:"Teraźniejsza strona bierna: IS + celebrated. Dzień JEST OBCHODZONY (przez ludzi) — podmiot dostaje akcję. IS CELEBRATED = stały coroczny zwyczaj."},
+  {t:"Przyimki",q:"My idea is that we dress up as teenagers _____ the 1950s.",o:["A. from","B. since","C. on","D. in"],c:0,e:"FROM + dekada/okres: teenagers FROM the 1950s = nastolatkowie z lat 50. Mówimy FROM a decade gdy opisujemy skąd pochodzi coś/ktoś. IN the 1950s = w latach 50. (ale tu chodzi o styl)."},
+  // Task 13 — sentence transformation
+  {t:"Zdania warunk.",q:"Take an umbrella or you'll get wet. → You'll get wet _____ (IF) take an umbrella.",o:["A. if you don't","B. if you won't","C. unless you","D. if you didn't"],c:0,e:"IF + present simple + will: 'if you don't take' = jeśli nie weźmiesz. Zero conditional: IF + simple present → will + verb. Nie używamy WILL po IF w zdaniach warunkowych."},
+  {t:"Stopniowanie",q:"It is so noisy here. → There is _____ (TOO) noise here.",o:["A. too many","B. too much","C. so many","D. very much"],c:1,e:"TOO MUCH + niepoliczalny: TOO MUCH noise = za dużo hałasu. Hałas (noise) jest niepoliczalny → TOO MUCH. TOO MANY + policzalny (too many cars)."},
+  {t:"Zwroty",q:"Let's go to the theatre on Friday! → How _____ (ABOUT) to the theatre on Friday?",o:["A. about going","B. about go","C. about to go","D. about we go"],c:0,e:"HOW ABOUT + gerund = propozycja (a może byśmy...?). How ABOUT GOING = a może pójdziemy. Po HOW ABOUT zawsze -ing. Porównaj: WHY DON'T WE go (bezokolicznik bez TO)."},
+  // Extra from reading texts
+  {t:"Zdania wzgl.",q:"Our teacher didn't believe the note _____ was on her desk.",o:["A. who","B. which","C. where","D. whose"],c:1,e:"WHICH = zdanie względne dla rzeczy (note). The note WHICH was on her desk = notatka, która była na jej biurku. WHO tylko dla ludzi."},
+  {t:"Strona bierna",q:"It is about a machine _____ was designed to transport its passengers through time.",o:["A. which","B. who","C. where","D. what"],c:0,e:"WHICH = zdanie względne dla rzeczy (machine). The machine WHICH was designed = maszyna, która została zaprojektowana. WAS DESIGNED = strona bierna."},
+  {t:"Gerund/Inf.",q:"In her free time she loved _____ pictures of plants.",o:["A. paint","B. to paint","C. painting","D. painted"],c:2,e:"Gerund po 'love': LOVE + -ing. She loved PAINTING = uwielbiała malować. Love/enjoy/keep/stop + -ing — zawsze!"},
+  {t:"Gerund/Inf.",q:"When she saw that her son had a talent for drawing, she decided _____ him lessons.",o:["A. giving","B. to give","C. give","D. given"],c:1,e:"Bezokolicznik po 'decide': DECIDE TO + verb. She decided TO GIVE = zdecydowała, że da mu lekcje. Decide NIGDY nie łączy się z gerund."},
+  {t:"Przyimki",q:"He travelled a lot _____ business. He was a salesman.",o:["A. in","B. by","C. on","D. for"],c:2,e:"ON BUSINESS = w celach służbowych. Stały zwrot: travel ON business, go ON business. Nie 'for business' ani 'by business'."},
+  {t:"Czas przyszły",q:"My idea is that we dress up as teenagers and _____ to the city centre.",o:["A. go","B. will go","C. are going","D. went"],c:0,e:"Present simple po 'that' w planie/sugestii: 'My idea is that we GO' = mój pomysł jest taki, żebyśmy poszli. Seria czynności w tym samym zdaniu używa tego samego czasu."},
+
+  // ── 2023 JUNE PAPER ────────────────────────────────────────────────────
+  // Task 5 — situational responses
+  {t:"Zwroty",q:"Koleżanka znalazła telefon na przystanku. Co jej doradzisz?",o:["A. I can help you find the best one.","B. We can look for the phone together.","C. You should wait for its owner to call."],c:2,e:"YOU SHOULD + verb = rada (powinieneś). 'Wait for its owner to call' = poczekaj aż właściciel zadzwoni. SHOULD wyraża radę, a nie obowiązek."},
+  {t:"Zwroty",q:"Chcesz zmienić tapetę na smartfonie, ale nie wiesz, którą wybrać. Jak poprosisz kolegę o opinię?",o:["A. Can you show me your wallpaper?","B. Which wallpaper do you think is the best?","C. Why don't you change your wallpaper?"],c:1,e:"WHICH + do you think = prośba o opinię. 'Which do you think is the best?' = Która twoim zdaniem jest najlepsza? Pytanie zaczyna się od WHICH, nie WHAT (konkretny wybór)."},
+  {t:"Zwroty",q:"Nie usłyszałeś(-aś), co powiedział kolega. Jak poprosisz go o powtórzenie?",o:["A. Could you say that again?","B. Haven't you heard that?","C. Should I repeat what I said?"],c:0,e:"COULD YOU = grzeczna prośba. 'Could you say that again?' = Czy mógłbyś to powtórzyć? Stały zwrot przy prośbie o powtórzenie."},
+  {t:"Zwroty",q:"Zamierzasz wyjechać z rodziną na wakacje. Jak zapytasz recepcjonistę w hotelu o możliwość przyjazdu z psem?",o:["A. Are you going to the hotel with the dog?","B. Are dogs allowed in the hotel?","C. Has your family arrived with the dog?"],c:1,e:"ARE + noun + ALLOWED = czy coś jest dozwolone? 'Are dogs allowed?' = Czy psy są dozwolone? Strona bierna: BE + allowed (być dozwolonym)."},
+  // Task 6 — gap fill (I'd prefer, can you do)
+  {t:"Zwroty",q:"How about going to Spain this summer? — Well, Spain is great but _____ to go there in spring.",o:["A. I prefer","B. I'd prefer","C. I will prefer","D. I'm preferring"],c:1,e:"I'D PREFER = wolałbym (tryb warunkowy). 'I'd prefer to go' = wolałabym pojechać. I'd = I would — grzeczniejsza, bardziej warunkowa forma PREFER."},
+  {t:"Zwroty",q:"Diana, _____ something for me, please? Sure, what is it?",o:["A. could you do","B. will you making","C. are you do","D. do you can"],c:0,e:"COULD YOU DO = grzeczna prośba. 'Could you do something for me?' = Czy mogłabyś coś dla mnie zrobić? COULD YOU = uprzejma prośba."},
+  // Task 11 — word choice (fit, every, allowed)
+  {t:"Słownictwo",q:"Everyone who is _____ enough can succeed at Everesting without going to the Himalayas.",o:["A. allowed","B. every","C. fit","D. tired"],c:2,e:"FIT = sprawny fizycznie (w dobrej kondycji). 'Fit enough' = wystarczająco sprawny. Nie mylić z 'allowed' (mieć pozwolenie) ani 'tired' (zmęczony)."},
+  {t:"Słownictwo",q:"You don't have to reach the top of the hill _____ time you go up.",o:["A. allowed","B. every","C. fit","D. many"],c:1,e:"EVERY time = za każdym razem. 'Every time you go up' = za każdym razem gdy jedziesz w górę. EVERY + singular noun = za każdy/każdym."},
+  {t:"Słownictwo",q:"You can take breaks, but only three breaks are _____.",o:["A. allowed","B. every","C. fit","D. tired"],c:0,e:"ALLOWED = dozwolone (strona bierna od 'allow'). 'Three breaks are allowed' = trzy przerwy są dozwolone. ARE + allowed = strona bierna teraźniejsza."},
+  // Task 12 — grammar gap fill (have, cheaper, colours)
+  {t:"Czas przyszły",q:"Today we _____ a great offer for you — a Bluetooth tracker for just $15.",o:["A. having","B. has","C. have","D. had"],c:2,e:"Present simple: WE HAVE = mamy. Podmiot 'we' → forma podstawowa 'have'. HAS tylko dla he/she/it. HAVING to imiesłów, nie forma osobowa."},
+  {t:"Stopniowanie",q:"This is 25% _____ than usual. Spend a little money today and save yourself trouble!",o:["A. cheap","B. cheaper","C. the cheapest","D. cheaply"],c:1,e:"CHEAPER THAN = stopień wyższy porównawczy. '25% cheaper than usual' = o 25% tańszy niż zwykle. Po THAN zawsze stopień wyższy, nie podstawowy."},
+  {t:"Słownictwo",q:"Our tracker comes in a few different _____.",o:["A. colour's","B. colours","C. colour","D. colouring"],c:1,e:"COLOURS = liczba mnoga (kilka kolorów). 'A few different colours' = kilka różnych kolorów. Apostrofa (colour's) oznacza dzierżawczość, nie liczbę mnogą!"},
+  // Task 13 — sentence transformation
+  {t:"Zdania warunk.",q:"There's nothing to eat for breakfast. → We _____ (ANYTHING) to eat for breakfast.",o:["A. don't have anything","B. have nothing","C. haven't anything","D. not have anything"],c:0,e:"DON'T HAVE ANYTHING = nie mamy niczego. Zamiana 'nothing' → 'not anything'. Zasada: nothing = not + anything. 'We don't have anything' = We have nothing."},
+  {t:"Stopniowanie",q:"The bookshop is close to my house. → The bookshop is _____ (FAR) my house.",o:["A. far from","B. not far","C. not far from","D. very far"],c:2,e:"NOT FAR FROM = niedaleko od. 'Close to' → 'not far from'. Dokładna zamiana sensu: blisko = niedaleko od. FAR FROM = daleko od (przeciwieństwo CLOSE TO)."},
+  {t:"Czas przyszły",q:"Do you plan to visit your grandma next week? → _____ (GOING) visit your grandma next week?",o:["A. Are you going to","B. Is he going to","C. Going to you","D. You are going to"],c:0,e:"ARE YOU GOING TO + verb = pytanie o plany. 'Do you plan to visit?' → 'Are you going to visit?' Schemat pytania: ARE/IS + podmiot + GOING TO + bezokolicznik."},
+
+  // ── JUNE 2023 ADDITIONAL (OJAP-100-2306, 14 czerwca 2023) ─────────────
+  // Task 5 — situational responses
+  {t:"Zwroty",q:"Koleżanka znalazła telefon na przystanku. Co jej doradzisz? (Czer. 2023 dod.)",o:["A. I can help you find the best one.","B. We can look for the phone together.","C. You should wait for its owner to call."],c:2,e:"YOU SHOULD = rada (powinieneś). 'Wait for its owner to call' = poczekaj, aż właściciel zadzwoni. Opcja A mówi o znalezieniu NOWEGO telefonu, B o szukaniu razem — tylko C jest sensowną radą dla znalezionego telefonu."},
+  {t:"Zwroty",q:"Chcesz zmienić tapetę na smartfonie i pytasz kolegę o opinię. (Czer. 2023 dod.)",o:["A. Can you show me your wallpaper?","B. Which wallpaper do you think is the best?","C. Why don't you change your wallpaper?"],c:1,e:"WHICH do you think is the best = prośba o opinię. A pyta o tapetę kolegi, C sugeruje MU zmianę — tylko B prosi o ocenę spośród dostępnych opcji."},
+  {t:"Zwroty",q:"Nie usłyszałeś, co powiedział kolega. Jak poprosisz o powtórzenie? (Czer. 2023 dod.)",o:["A. Could you say that again?","B. Haven't you heard that?","C. Should I repeat what I said?"],c:0,e:"COULD YOU SAY THAT AGAIN = uprzejma prośba o powtórzenie. B pyta, czy rozmówca słyszał (nie o powtórzenie), C sugeruje że to TY masz powtórzyć — odwrócona sytuacja."},
+  {t:"Zwroty",q:"Jedziesz z rodziną na wakacje. Jak zapytasz recepcjonistę o psy w hotelu? (Czer. 2023 dod.)",o:["A. Are you going to the hotel with the dog?","B. Are dogs allowed in the hotel?","C. Has your family arrived with the dog?"],c:1,e:"ARE DOGS ALLOWED = czy psy są dozwolone? Strona bierna: BE + ALLOWED. A pyta o recepcjonistę, C pyta o przybycie rodziny — tylko B pyta o zasady hotelu."},
+  // Task 7 — reading comprehension
+  {t:"Czytanie",q:"The San Jose Music Club moved to a new building because they _____",o:["A. were not allowed to have parties in the old studio","B. didn't have enough space in the old studio","C. have fewer employees than before"],c:1,e:"Ogłoszenie: 'our old studio has become too small' — za mało miejsca. Klub urósł (57 nowych członków, 3 pracownicy), więc potrzebuje większego lokalu. A i C są sprzeczne z tekstem."},
+  {t:"Czytanie",q:"The QR FITNESS PATH text is for someone who wants to _____",o:["A. sign up for a gym","B. make fitness videos","C. exercise outdoors"],c:2,e:"Tekst: 'Start working out in the open air' = ćwicz na świeżym powietrzu. Nie ma zapisów do siłowni ani nagrywania — filmy już są gotowe, skanuje się je kodem QR."},
+  {t:"Czytanie",q:"Brian wrote his email to Ms Thompson in order to _____",o:["A. express thanks to someone","B. ask someone a favour","C. introduce himself to a new teacher"],c:0,e:"Brian pisze: 'I'm really grateful because you were my inspiration.' Cel = podziękowanie. Nie prosi o przysługę i nie przedstawia się — znają się z lekcji."},
+  {t:"Czytanie",q:"The 'Enjoy Yorkshire' text is mainly about _____",o:["A. an app with maps of footpaths","B. a new guidebook to Yorkshire","C. a person who helps tourists in Yorkshire"],c:2,e:"Tekst opisuje Jonathana Willcoxa — lokalnego przewodnika. 'Even the newest guidebook… will not replace the experience and knowledge of a local guide.' Chodzi o konkretną osobę."},
+  // Task 8 — sentence insertion (SUCCESS)
+  {t:"Czytanie",q:"SUCCESS tekst, luka 8.1: 'You want success. [8.1] Nobody likes waiting.' Co tu pasuje?",o:["A. At school it was hard for him to make friends.","B. Because he was ambitious he finally succeeded.","C. What is more, you would like it to come sooner rather than later.","D. But even well-known people often have to deal with problems."],c:2,e:"C: chcesz sukcesu (8.0) → CO WIĘCEJ chciałbyś go jak najszybciej (8.1) → nikt nie lubi czekać. 'What is more' = co więcej — naturalny łącznik wzmacniający poprzednie zdanie."},
+  {t:"Czytanie",q:"SUCCESS tekst, luka 8.2: 'Celebrity life seems easy. [8.2] For example, Spielberg...' Co tu pasuje?",o:["A. At school it was hard for him to make friends.","B. Because he was ambitious he finally succeeded.","C. What is more, you would like it to come sooner rather than later.","D. But even well-known people often have to deal with problems."],c:3,e:"D: myślimy, że życie sławnych jest łatwe → ALE nawet znani ludzie mają problemy → NA PRZYKŁAD Spielberg. 'But' wprowadza kontrast, a 'For example' to konkretny dowód."},
+  {t:"Czytanie",q:"SUCCESS tekst, luka 8.3: 'Spielberg had difficulties. [8.3] Also, he didn't do well in exams.' Co tu pasuje?",o:["A. At school it was hard for him to make friends.","B. Because he was ambitious he finally succeeded.","C. What is more, you would like it to come sooner rather than later.","D. But even well-known people often have to deal with problems."],c:0,e:"A: Spielberg miał trudności (8.2) → W SZKOLE trudno mu było zaprzyjaźnić się (8.3) → ALSO nie radził sobie na egzaminach. 'Also' łączy dwa szkolne problemy."},
+  // Task 9 — volunteer matching
+  {t:"Czytanie",q:"Wolontariat: która propozycja jest dla kogoś zainteresowanego nauką od ekspertów?",o:["A. Sprzątanie plaży","B. Liczenie rowerzystów","C. Teen Team w zoo"],c:2,e:"TEEN TEAM (C) = 8-miesięczny program, podczas którego obserwujesz 'professional animal caretakers at work' — uczysz się od zawodowców. Plaża i liczenie rowerzystów nie wymagają eksperckich mentorów."},
+  {t:"Czytanie",q:"Wolontariat: która propozycja jest dla kogoś, kto nie ma nic przeciwko zbieraniu śmieci?",o:["A. Sprzątanie plaży","B. Liczenie rowerzystów","C. Teen Team w zoo"],c:0,e:"PLAŻA (A): 'help us clean up our beautiful beach' — organizatorzy zapewniają worki na śmieci. Zbieranie śmieci = picking up rubbish. Tylko to zadanie wprost dotyczy sprzątania."},
+  {t:"Czytanie",q:"Wolontariat: która propozycja pomaga sprawdzić popularność danego środka transportu?",o:["A. Sprzątanie plaży","B. Liczenie rowerzystów","C. Teen Team w zoo"],c:1,e:"LICZENIE ROWERZYSTÓW (B): 'Is it true that more and more people are choosing to travel by bike?' — wolontariusze liczą rowerzystów żeby to sprawdzić. Środek transportu = rower."},
+  {t:"Czytanie",q:"Wolontariat: która propozycja wymaga zaangażowania przez więcej niż jeden dzień?",o:["A. Sprzątanie plaży","B. Liczenie rowerzystów","C. Teen Team w zoo"],c:2,e:"TEEN TEAM (C) = program 8-miesięczny, minimum 40 godzin. Plaża = jeden dzień (20 września), liczenie rowerzystów = jeden dzień (3 czerwca). Tylko zoo to wielomiesięczne zaangażowanie."},
+  // Task 11 — Everesting (fit, every, allowed)
+  {t:"Słownictwo",q:"Everyone who is _____ enough can succeed at 'Everesting'. (dod. Czer. 2023)",o:["A. allowed","B. every","C. fit","D. tired"],c:2,e:"FIT = sprawny fizycznie. 'Fit enough' = wystarczająco sprawny do wyzwania kolarskiego. ALLOWED = mieć pozwolenie (nie o kondycji), TIRED = zmęczony — oba nie pasują."},
+  {t:"Słownictwo",q:"You don't have to reach the top of the hill _____ time you go up. (dod. Czer. 2023)",o:["A. allowed","B. every","C. fit","D. tired"],c:1,e:"EVERY time = za każdym razem. 'Every time you go up' = za każdym razem gdy jedziesz pod górę. EVERY + singular noun = stała konstrukcja (every day, every time)."},
+  {t:"Słownictwo",q:"Only three breaks are _____ during 'Everesting'. (dod. Czer. 2023)",o:["A. allowed","B. every","C. fit","D. tired"],c:0,e:"ALLOWED = dozwolone (strona bierna: BE + allowed). 'Three breaks are allowed' = trzy przerwy są dozwolone. Strona bierna teraźniejsza: are + past participle."},
+  // Task 12 — Bluetooth tracker (have, cheaper, colours)
+  {t:"Słownictwo",q:"Today we _____ a great offer for you — a Bluetooth tracker for $15. (dod. Czer. 2023)",o:["A. having","B. has","C. have","D. had"],c:2,e:"WE HAVE = mamy (present simple). Podmiot 'we' → forma podstawowa: have. HAS = dla he/she/it. HAVING to imiesłów — nie może być głównym czasownikiem bez BE."},
+  {t:"Stopniowanie",q:"This is 25% _____ than usual — buy now and save yourself trouble! (dod. Czer. 2023)",o:["A. cheap","B. cheaper","C. the cheapest","D. cheaply"],c:1,e:"CHEAPER THAN = stopień wyższy. '25% cheaper than usual' = o 25% tańszy niż zwykle. THAN wymaga stopnia wyższego. CHEAP = stopień podstawowy, CHEAPLY = przysłówek."},
+  {t:"Słownictwo",q:"Our Bluetooth tracker comes in a few different _____. (dod. Czer. 2023)",o:["A. colour's","B. colours","C. colour","D. colouring"],c:1,e:"COLOURS = liczba mnoga. 'A few different colours' = kilka różnych kolorów. Apostrofa (colour's) oznacza dzierżawczość, nie liczbę mnogą. COLOUR (l. poj.) nie pasuje po 'a few different'."},
+  // Task 13 — sentence transformations
+  {t:"Zdania warunk.",q:"There's nothing to eat → We _____ (ANYTHING) to eat for breakfast. (dod. Czer. 2023)",o:["A. don't have anything","B. have nothing","C. haven't anything","D. not have anything"],c:0,e:"DON'T HAVE ANYTHING = zamiana 'nothing' na 'not...anything'. Zasada: nothing = not + anything. Przeczenie tworzymy przez DON'T/DOESN'T + have + anything."},
+  {t:"Stopniowanie",q:"The bookshop is close to my house → The bookshop is _____ (FAR) my house. (dod. Czer. 2023)",o:["A. far from","B. not far","C. not far from","D. very far from"],c:2,e:"NOT FAR FROM = niedaleko od. 'Close to' → 'not far from': oba wyrażają bliskość. FAR FROM byłoby przeciwieństwem. Konieczny przyimek FROM (niedaleko OD domu)."},
+  {t:"Czas przyszły",q:"Do you plan to visit your grandma? → _____ (GOING) visit your grandma next week? (dod. Czer. 2023)",o:["A. Are you going to","B. Is she going to","C. Going to you","D. You are going to"],c:0,e:"ARE YOU GOING TO + verb = pytanie o plany. Schemat: ARE/IS + podmiot + GOING TO + bezokolicznik. Podmiot = you → ARE you going to. Nie odwracamy kolejności w D."},
+];
+
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+let pendingTopicIdx = -1;
+let totalXP    = parseInt(localStorage.getItem('e8_xp')     || '0');
+let streak     = parseInt(localStorage.getItem('e8_streak') || '0');
+let lastPlay   = localStorage.getItem('e8_lastplay')        || '';
+let totalDone  = parseInt(localStorage.getItem('e8_done')   || '0');
+let isPro      = localStorage.getItem('e8_pro') === '1';
+
+// ─── STREAK ──────────────────────────────────────────────────────────────────
+function checkStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (lastPlay === today) return;
+  streak = (lastPlay === yesterday) ? streak + 1 : 1;
+  lastPlay = today;
+  localStorage.setItem('e8_streak', streak);
+  localStorage.setItem('e8_lastplay', today);
+}
+
+// ─── UI UPDATE ────────────────────────────────────────────────────────────────
+function updateUI() {
+  const s = streak + ' ' + (streak === 1 ? 'dzień' : 'dni');
+  document.getElementById('home-streak').textContent = s;
+  document.getElementById('quiz-streak').textContent = s;
+  document.getElementById('home-xp').textContent  = totalXP + ' XP';
+  document.getElementById('quiz-xp').textContent  = totalXP + ' XP';
+  document.getElementById('results-xp').textContent = totalXP + ' XP';
+  document.getElementById('home-done').textContent = totalDone;
+  renderTopicList();
+  // Pro badge on sciagawka screen
+  const badge = document.getElementById('sciagawka-pro-badge');
+  if (badge) badge.style.display = isPro ? 'flex' : 'none';
+}
+
+// ─── TOPIC LIST RENDERER ──────────────────────────────────────────────────────
+function renderTopicList() {
+  const list = document.getElementById('topics-list');
+  const btn  = document.getElementById('pro-teaser-btn');
+  list.innerHTML = '';
+  let hasLocked = false;
+
+  TOPIC_META.forEach((meta, idx) => {
+    const unlocked = meta.free || isPro;
+    if (!unlocked) hasLocked = true;
+
+    const row = document.createElement('div');
+    row.className = 'topic-row' + (unlocked ? '' : ' locked');
+    row.innerHTML = `
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="topic-name">${meta.name}</div>
+          ${meta.free ? '<span class="free-pill">gratis</span>' : ''}
+        </div>
+        <div class="topic-count">${meta.count} pytań</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${unlocked ? '' : '<span class="lock-icon">🔒</span>'}
+        <div class="topic-arrow">›</div>
+      </div>`;
+    row.onclick = () => unlocked ? openSciagawka(idx) : openPaywall();
+    list.appendChild(row);
+  });
+
+  btn.style.display = hasLocked ? 'block' : 'none';
+}
+
+// ─── ŚCIĄGAWKA MODAL ──────────────────────────────────────────────────────────
+function openSciagawka(idx) {
+  pendingTopicIdx = idx;
+  const meta = TOPIC_META[idx];
+  const sc   = meta.sciagawka;
+
+  document.getElementById('sciagawka-title').textContent = '📖 ' + meta.name;
+
+  let html = `<div class="sciagawka-intro">${sc.intro}</div>`;
+
+  sc.sections.forEach(sec => {
+    html += `<div class="rule-section"><div class="rule-title">${sec.title}</div>`;
+    sec.rules.forEach(r => {
+      html += `<div class="rule-item">${r.text}${r.example ? '<br><span style="color:var(--green-dark);opacity:.8">Np: ' + r.example + '</span>' : ''}</div>`;
+    });
+    sec.traps.forEach(t => {
+      html += `<div class="rule-trap">${t}</div>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `<button class="modal-start-btn" onclick="startTopicFromModal()">Zaczynam ćwiczenia →</button>`;
+
+  document.getElementById('sciagawka-body').innerHTML = html;
+  document.getElementById('sciagawka-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSciagawka(e) {
+  if (e.target === document.getElementById('sciagawka-modal')) closeSciagawkaBtn();
+}
+function closeSciagawkaBtn() {
+  document.getElementById('sciagawka-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function startTopicFromModal() {
+  closeSciagawkaBtn();
+  const key = TOPIC_META[pendingTopicIdx].key;
+  currentQuestions = shuffle(QUESTIONS.filter(q => q.t === key));
+  startQuiz();
+}
+
+// ─── PAYWALL MODAL ────────────────────────────────────────────────────────────
+function openPaywall() {
+  document.getElementById('paywall-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePaywall(e) {
+  if (e.target === document.getElementById('paywall-modal')) closePaywallBtn();
+}
+function closePaywallBtn() {
+  document.getElementById('paywall-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function unlockPro() {
+  isPro = true;
+  localStorage.setItem('e8_pro', '1');
+  closePaywallBtn();
+  updateUI();
+  // Rebuild accordion to show new CTA buttons
+  document.getElementById('accordion-list').innerHTML = '';
+  renderAccordion();
+  // Show brief confirmation
+  const hero = document.querySelector('.home-hero');
+  const msg = document.createElement('div');
+  msg.style.cssText = 'background:var(--pro-light);color:var(--pro);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:500;margin-top:12px;text-align:center';
+  msg.textContent = '🎉 Pro odblokowany! Masz dostęp do wszystkich tematów.';
+  hero.appendChild(msg);
+  setTimeout(() => msg.remove(), 3500);
+}
+
+// ─── QUIZ LOGIC ───────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startAll() {
+  const qs = isPro
+    ? QUESTIONS
+    : QUESTIONS.filter(q => FREE_TOPIC_KEYS.has(q.t));
+  currentQuestions = shuffle(qs);
+  startQuiz();
+}
+
+function startQuiz() {
+  currentIndex = 0;
+  score = 0;
+  answered = false;
+  checkStreak();
+  showScreen('screen-quiz');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q     = currentQuestions[currentIndex];
+  const total = currentQuestions.length;
+  const pct   = Math.round((currentIndex / total) * 100);
+
+  document.getElementById('q-topic').textContent = q.t;
+  document.getElementById('q-num').textContent   = 'Pytanie ' + (currentIndex + 1);
+  document.getElementById('q-text').innerHTML    = q.q.replace('_____', '<span class="gap">_____</span>');
+  document.getElementById('progress-label').textContent = 'Pytanie ' + (currentIndex + 1) + ' z ' + total;
+  document.getElementById('progress-pct').textContent   = pct + '%';
+  document.getElementById('progress-fill').style.width  = pct + '%';
+  document.getElementById('explanation').classList.remove('show');
+  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('xp-pop').classList.remove('fire');
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = '<span class="opt-letter">' + String.fromCharCode(65 + i) + '</span>' + opt.slice(3);
+    btn.onclick = () => selectAnswer(i, q.c, q.e, btn);
+    container.appendChild(btn);
+  });
+  answered = false;
+}
+
+function selectAnswer(idx, correct, explanation, clickedBtn) {
+  if (answered) return;
+  answered = true;
+  const buttons = document.querySelectorAll('.option');
+  buttons.forEach(b => b.disabled = true);
+
+  if (idx === correct) {
+    clickedBtn.classList.add('correct');
+    score++;
+    totalXP += 10;
+    totalDone++;
+    localStorage.setItem('e8_xp', totalXP);
+    localStorage.setItem('e8_done', totalDone);
+    const pop = document.getElementById('xp-pop');
+    pop.classList.add('fire');
+    setTimeout(() => pop.classList.remove('fire'), 800);
+  } else {
+    clickedBtn.classList.add('wrong');
+    buttons[correct].classList.add('correct');
+  }
+
+  const exp = document.getElementById('explanation');
+  exp.textContent = explanation;
+  exp.classList.add('show');
+  document.getElementById('next-btn').classList.add('show');
+  updateUI();
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= currentQuestions.length) showResults();
+  else loadQuestion();
+}
+
+function showResults() {
+  const total    = currentQuestions.length;
+  const pct      = Math.round((score / total) * 100);
+  const xpEarned = score * 10;
+
+  document.getElementById('res-pct').textContent     = pct + '%';
+  document.getElementById('res-sub').textContent     = score + '/' + total;
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent   = total - score;
+  document.getElementById('res-xp').textContent      = '+' + xpEarned;
+
+  let title, desc;
+  if (pct >= 90)      { title = 'Rewelacja!';        desc = 'Jesteś gotowy na egzamin. Wynik ' + pct + '% to świetny rezultat!'; }
+  else if (pct >= 70) { title = 'Dobra robota!';     desc = 'Solidny wynik. Powtórz błędne pytania i będziesz gotowy na E8.'; }
+  else if (pct >= 50) { title = 'Jest potencjał!';   desc = 'Połowa pytań poprawnie. Wróć do wyjaśnień i spróbuj jeszcze raz.'; }
+  else                { title = 'Nie poddawaj się!'; desc = 'Przejrzyj ściągawkę przed tematem i zagraj jeszcze raz!'; }
+
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-desc').textContent  = desc;
+  document.getElementById('share-text').innerHTML  =
+    '<strong>Podziel się wynikiem:</strong> "Zrobiłem test z angielskiego na E8 — ' + pct + '% poprawnych! Ty ile dostaniesz? egzamin8.pl"';
+
+  showScreen('screen-results');
+  updateUI();
+}
+
+function retryQuiz() {
+  currentIndex = 0;
+  score = 0;
+  currentQuestions = shuffle(currentQuestions);
+  showScreen('screen-quiz');
+  loadQuestion();
+}
+
+function goHome() {
+  // show nav, switch to quiz tab (home)
+  document.getElementById('bottom-nav').style.display = 'flex';
+  switchTab('quiz');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  // hide nav during quiz/results, show on home/sciagawka
+  const hideNav = (id === 'screen-quiz' || id === 'screen-results');
+  document.getElementById('bottom-nav').style.display = hideNav ? 'none' : 'flex';
+}
+
+
+// ─── TAB SWITCHING ────────────────────────────────────────────────────────────
+const NAV_SCREENS = { quiz: 'screen-home', sciagawka: 'screen-sciagawka' };
+let currentTab = 'quiz';
+
+function switchTab(tab) {
+  currentTab = tab;
+  // Show/hide nav screens only (not quiz/results)
+  Object.entries(NAV_SCREENS).forEach(([key, screenId]) => {
+    const screen = document.getElementById(screenId);
+    if (key === tab) {
+      screen.classList.add('active');
+    } else {
+      screen.classList.remove('active');
+    }
+  });
+  // Update nav tabs
+  document.getElementById('nav-quiz').classList.toggle('active', tab === 'quiz');
+  document.getElementById('nav-sciagawka').classList.toggle('active', tab === 'sciagawka');
+  window.scrollTo(0, 0);
+  if (tab === 'sciagawka') renderAccordion();
+  if (tab === 'quiz') updateUI();
+}
+
+// ─── ACCORDION RENDERER ───────────────────────────────────────────────────────
+const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬','❓','🔤','🔀','📄'];
+
+function renderAccordion() {
+  const list = document.getElementById('accordion-list');
+  // only rebuild if empty
+  if (list.children.length === TOPIC_META.length) return;
+  list.innerHTML = '';
+
+  TOPIC_META.forEach((meta, idx) => {
+    const sc = meta.sciagawka;
+    const icon = TOPIC_ICONS[idx] || '📚';
+
+    // Build rules HTML
+    let rulesHtml = `<div class="accordion-intro">${sc.intro}</div>`;
+    sc.sections.forEach(sec => {
+      rulesHtml += `<div class="acc-rule-title">${sec.title}</div>`;
+      sec.rules.forEach(r => {
+        rulesHtml += `<div class="acc-rule-item">${r.text}`;
+        if (r.example) rulesHtml += `<div class="acc-rule-example">Np: ${r.example}</div>`;
+        rulesHtml += `</div>`;
+      });
+      sec.traps.forEach(t => {
+        rulesHtml += `<div class="acc-trap">${t}</div>`;
+      });
+    });
+
+    // CTA button — quiz always available from here, paywall if locked
+    const unlocked = meta.free || isPro;
+    const ctaHtml = unlocked
+      ? `<button class="acc-start-btn" onclick="startTopicFromAccordion(${idx})">Ćwicz ten temat →</button>`
+      : `<button class="acc-unlock-btn" onclick="openPaywall()">🔒 Odblokuj ćwiczenia Pro</button>`;
+
+    const item = document.createElement('div');
+    item.className = 'accordion-item';
+    item.id = 'acc-' + idx;
+    item.innerHTML = `
+      <div class="accordion-header" onclick="toggleAccordion(${idx})">
+        <div class="accordion-header-left">
+          <span class="accordion-topic-icon">${icon}</span>
+          <div>
+            <div class="accordion-topic-name">${meta.name}</div>
+            <div class="accordion-topic-count">${meta.count} pytań${meta.free ? ' · gratis' : ' · Pro'}</div>
+          </div>
+        </div>
+        <span class="accordion-chevron">›</span>
+      </div>
+      <div class="accordion-body">
+        ${rulesHtml}
+        ${ctaHtml}
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+function toggleAccordion(idx) {
+  const item = document.getElementById('acc-' + idx);
+  const isOpen = item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+  // open clicked if it was closed
+  if (!isOpen) {
+    item.classList.add('open');
+    // smooth scroll into view
+    setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+function startTopicFromAccordion(idx) {
+  const key = TOPIC_META[idx].key;
+  currentQuestions = shuffle(QUESTIONS.filter(q => q.t === key));
+  // switch to quiz tab first
+  switchTab('quiz');
+  startQuiz();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+checkStreak();
+updateUI();
+</script>
+</body>
+</html>
