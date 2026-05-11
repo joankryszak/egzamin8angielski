@@ -507,10 +507,10 @@
   </div>
   <div class="home-hero">
     <div class="home-title">Angielski na <span>E8</span> w pigułce</div>
-    <div class="home-sub">130 pytań z wyjaśnieniami po polsku. Oparty na arkuszach CKE 2025–2023.</div>
+    <div class="home-sub">182 pytań z wyjaśnieniami po polsku. Oparty na arkuszach CKE 2025–2023.</div>
   </div>
   <div class="home-stats">
-    <div class="stat-card"><div class="stat-num">130</div><div class="stat-lbl">Pytań</div></div>
+    <div class="stat-card"><div class="stat-num">182</div><div class="stat-lbl">Pytań</div></div>
     <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Tematów</div></div>
     <div class="stat-card"><div class="stat-num" id="home-done">0</div><div class="stat-lbl">Zaliczone</div></div>
   </div>
@@ -664,7 +664,7 @@ const TOPIC_META = [
   {
     key: "Strona bierna",
     name: "Strona bierna",
-    count: 11, free: true,
+    count: 13, free: true,
     sciagawka: {
       intro: "Strona bierna opisuje sytuację, gdy podmiot DOSTAJE akcję zamiast ją wykonywać. Klucz: WAS/WERE (przeszłość) lub IS/ARE (teraźniejszość) + 3. forma czasownika.",
       sections: [
@@ -686,7 +686,7 @@ const TOPIC_META = [
   {
     key: "Gerund/Inf.",
     name: "Gerund i bezokolicznik",
-    count: 12, free: true,
+    count: 13, free: true,
     sciagawka: {
       intro: "Gerund (-ing) stosuje się po przyimkach i niektórych czasownikach. Bezokolicznik (to + verb) po innych czasownikach. Najlepiej nauczyć się list!",
       sections: [
@@ -741,7 +741,7 @@ const TOPIC_META = [
   {
     key: "Przyimki",
     name: "Przyimki",
-    count: 12, free: false,
+    count: 13, free: false,
     sciagawka: {
       intro: "Przyimki w języku angielskim często nie odpowiadają polskim. Najlepiej uczyć się ich w gotowych zwrotach (collocations).",
       sections: [
@@ -765,7 +765,7 @@ const TOPIC_META = [
   {
     key: "Stopniowanie",
     name: "Stopniowanie przymiotników",
-    count: 15, free: false,
+    count: 18, free: false,
     sciagawka: {
       intro: "Przymiotniki krótkie (1 sylaba) stopniujemy przez -er/-est. Długie — przez more/most. Kilka wyjątków trzeba zapamiętać.",
       sections: [
@@ -791,7 +791,7 @@ const TOPIC_META = [
   {
     key: "Czas przyszły",
     name: "Czasy przyszłe",
-    count: 13, free: false,
+    count: 15, free: false,
     sciagawka: {
       intro: "W angielskim są dwa główne sposoby na wyrażenie przyszłości. Klucz: czy decyzja/plan były wcześniej, czy właśnie teraz?",
       sections: [
@@ -813,7 +813,7 @@ const TOPIC_META = [
   {
     key: "Zdania wzgl.",
     name: "Zdania względne",
-    count: 12, free: false,
+    count: 13, free: false,
     sciagawka: {
       intro: "Zaimki względne łączą dwa zdania. Wybór zależy od tego, czy opisujesz osobę, rzecz, miejsce, czas, powód, czy relację dzierżawczą.",
       sections: [
@@ -837,7 +837,7 @@ const TOPIC_META = [
   {
     key: "Zwroty",
     name: "Zwroty i reakcje",
-    count: 15, free: false,
+    count: 23, free: false,
     sciagawka: {
       intro: "Zadanie 5 i 6 egzaminu to reakcje na sytuacje i uzupełnianie dialogów. Ćwicz gotowe zwroty — często powtarzają się z arkusza na arkusz.",
       sections: [
@@ -863,7 +863,7 @@ const TOPIC_META = [
   {
     key: "Pytania",
     name: "Pytania i luki",
-    count: 2, free: false,
+    count: 6, free: false,
     sciagawka: {
       intro: "Pytania HOW (how often, how long, how much, how many) i prośby o pozwolenie (can I) — warto znać różnicę.",
       sections: [
@@ -883,7 +883,7 @@ const TOPIC_META = [
   {
     key: "Słownictwo",
     name: "Słownictwo",
-    count: 13, free: false,
+    count: 22, free: false,
     sciagawka: {
       intro: "Zadania na słownictwo testują znajomość konkretnych wyrazów w kontekście. Zwróć uwagę na kolokacje (wyrazy, które chodzą razem).",
       sections: [
@@ -927,7 +927,7 @@ const TOPIC_META = [
   {
     key: "Czytanie",
     name: "Rozumienie tekstów",
-    count: 11, free: false,
+    count: 33, free: false,
     sciagawka: {
       intro: "Czytanie ze zrozumieniem: zawsze wróć do tekstu! Odpowiedź musi wynikać wprost z treści — nie z Twojej wiedzy ogólnej.",
       sections: [
@@ -1415,7 +1415,83 @@ function switchTab(tab) {
 }
 
 // ─── ACCORDION RENDERER ───────────────────────────────────────────────────────
-const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬','❓','🔤','🔀','📄'];
+const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬','❓','🔤','🔀','📄'
+  // ── JUNE 2022 ADDITIONAL (OJAP-100-2206, 15 czerwca 2022) ────────────────
+  // Zadanie 5 — situational responses
+  {t:"Zwroty",q:"Przychodzisz spóźniony na spotkanie z kolegą. Jak go przeprosisz? (Czer. 2022 dod.)",o:["A. Sorry, you're too late.","B. You should at least say sorry.","C. I'm so sorry for being late."],c:2,e:"I'M SO SORRY FOR BEING LATE = przepraszam że się spóźniłem. Gerund po FOR: sorry for BEING late. A mówi do rozmówcy że ON jest spóźniony, B to rada — tylko C to przeprosiny."},
+  {t:"Zwroty",q:"Kuzynka pokazuje Ci prezent dla Twojej mamy. Jak wyrazisz opinię? (Czer. 2022 dod.)",o:["A. You're right. Mum's opinion is the most important.","B. You're welcome. I'm glad you like it.","C. It's lovely. Mum will like it a lot."],c:2,e:"IT'S LOVELY = jest śliczny — wyrażenie opinii. YOU'RE WELCOME to odpowiedź na dziękuję, YOU'RE RIGHT to potwierdzenie czyjejś opinii. Tylko C wyraża ocenę prezentu."},
+  {t:"Zwroty",q:"Koleżanka zaprasza Cię na urodziny. Jak przyjmiesz zaproszenie? (Czer. 2022 dod.)",o:["A. Great! I'll be there.","B. Not this time.","C. I hope you had fun."],c:0,e:"GREAT! I'LL BE THERE = świetnie, będę! Przyjęcie zaproszenia. B to odmowa, C to komentarz po imprezie (czas przeszły 'had'). Tylko A to entuzjastyczna akceptacja."},
+  {t:"Zwroty",q:"Kolega zdał ważny egzamin. Jak mu pogratulujesz? (Czer. 2022 dod.)",o:["A. Well done!","B. Don't worry!","C. Take care of it!"],c:0,e:"WELL DONE = brawo, gratulacje! Standardowe wyrażenie uznania za sukces. DON'T WORRY to pocieszenie (przed egzaminem), TAKE CARE OF IT to nakaz dbania o coś. Tylko A to gratulacje."},
+  // Zadanie 6 — gap fill dialogue (coach/football)
+  {t:"Pytania",q:"Coach, 6.1. (ask) _____ you a question? (dialog z trenerem, Czer. 2022 dod.)",o:["A. can I ask","B. could I ask","C. I ask","D. do I ask"],c:1,e:"COULD I ASK = czy mógłbym zadać? Grzeczna prośba o pozwolenie. COULD jest bardziej uprzejme niż CAN. 'Could I ask you a question?' to klasyczny zwrot kiedy chcesz o coś zapytać przełożonego."},
+  {t:"Pytania",q:"6.2. (about) _____ talking to him? — How about talking to the football captain? (Czer. 2022 dod.)",o:["A. How about","B. What about","C. Think about","D. About"],c:0,e:"HOW ABOUT + -ing = a może...? Sugestia. 'How about talking to him?' = a może porozmawiasz z nim? HOW ABOUT i WHAT ABOUT są wymienne, ale w tym zadaniu słowo kluczowe to 'about' — pasuje HOW ABOUT."},
+  // Zadanie 7 — reading comprehension
+  {t:"Czytanie",q:"Where did Tina and Kelly first meet? (blog Tiny, Czer. 2022 dod.)",o:["A. at a souvenir shop","B. in a café","C. at school"],c:0,e:"Blog Tiny: 'when I was shopping I met a girl' — poznały się podczas zakupów w sklepie z pamiątkami (souvenir shop). W kawiarni dopiero planują się spotkać ('decided to meet next week in our local café')."},
+  {t:"Czytanie",q:"The London Double-Decker Buses text is an advertisement for a _____",o:["A. museum exhibition","B. travel agency","C. driving school"],c:0,e:"Tekst: 'We have over 30 different old double-deckers to see' + 'On display in July and August' + 'book guided tours' — to wystawa muzealna starych autobusów. Nie agencja turystyczna ani szkoła jazdy."},
+  {t:"Czytanie",q:"'A Tour With a Difference' — the author of this text _____",o:["A. gives tips how to do the gardening","B. recommends visiting an unusual garden","C. suggests where to buy vegetables"],c:1,e:"Tekst zachęca do wzięcia udziału w wycieczce do ogrodu na dachu wieżowca — 'join us for an amazing walk'. To rekomendacja odwiedzenia niezwykłego ogrodu, nie porady ogrodnicze ani sklep."},
+  {t:"Czytanie",q:"The Alice in Wonderland musical review text is about _____",o:["A. writing a children's book","B. filming an expensive movie","C. going to a live performance"],c:2,e:"Autor opisuje wizytę na musicalu: 'I decided to see it', 'After the performance' — to recenzja spektaklu na żywo. Nie pisanie książki ani kręcenie filmu, choć padają te porównania w tekście."},
+  // Zadanie 8 — sentence insertion (Pirate Gold)
+  {t:"Czytanie",q:"PIRATE GOLD: 'Ship caught in storm. 8.1. _____ Black Sam and his men went down with it.' Co pasuje?",o:["A. The team looked for the Whydah for two months but found only rubbish.","B. The boy often dreamt about finding the pirates' treasure.","C. The Whydah hit a rock and sank to the bottom of the ocean.","D. He knew it was the map of an island near Cape Cod."],c:2,e:"C: statek wpadł w burzę (8.0) → WHYDAH UDERZYŁA W SKAŁĘ I ZATONĘŁA (8.1) → Black Sam i marynarze poszli na dno. Logiczny ciąg: burza → uderzenie → zatonięcie → ofiary."},
+  {t:"Czytanie",q:"PIRATE GOLD: 'Barry słyszał fascynujące opowieści wuja. 8.2. _____ That's why he decided to search for the ship.' Co pasuje?",o:["A. The team looked for the Whydah for two months but found only rubbish.","B. The boy often dreamt about finding the pirates' treasure.","C. The Whydah hit a rock and sank to the bottom of the ocean.","D. He knew it was the map of an island near Cape Cod."],c:1,e:"B: Barry słyszał ekscytujące opowieści (8.1) → CHŁOPIEC CZĘSTO MARZYŁ O ZNALEZIENIU SKARBU (8.2) → dlatego jako dorosły postanowił szukać statku. THAT'S WHY łączy marzenie z decyzją."},
+  {t:"Czytanie",q:"PIRATE GOLD: 'In May 1983 they started exploring. 8.3. _____ Barry was very unhappy about that.' Co pasuje?",o:["A. The team looked for the Whydah for two months but found only rubbish.","B. The boy often dreamt about finding the pirates' treasure.","C. The Whydah hit a rock and sank to the bottom of the ocean.","D. He knew it was the map of an island near Cape Cod."],c:0,e:"A: zaczęli szukać (8.2) → SZUKALI 2 MIESIĄCE I ZNALEŹLI TYLKO ŚMIECI (8.3) → Barry był bardzo nieszczęśliwy. 'ABOUT THAT' odnosi się do znalezienia tylko śmieci."},
+  // Zadanie 9 — lyrics websites matching
+  {t:"Czytanie",q:"Which lyrics website lets users choose the level of language difficulty? (Czer. 2022 dod.)",o:["A. LyricsAtoZ.com","B. lyricstraining.com","C. song-machine.org.uk"],c:1,e:"LyricsTraining (B): 'You can decide if you want to find songs for beginners or more advanced learners' — wybór poziomu trudności. Inne strony nie oferują tej funkcji."},
+  {t:"Czytanie",q:"Which lyrics website lets users find a song using a phrase from it? (Czer. 2022 dod.)",o:["A. LyricsAtoZ.com","B. lyricstraining.com","C. song-machine.org.uk"],c:0,e:"LyricsAtoZ (A): 'You can also find lyrics by typing in a few words you remember from a song' — szukanie piosenki po zapamiętanym fragmencie tekstu."},
+  {t:"Czytanie",q:"Which lyrics website lets users create their own song lyrics? (Czer. 2022 dod.)",o:["A. LyricsAtoZ.com","B. lyricstraining.com","C. song-machine.org.uk"],c:2,e:"Song-machine (C): 'Are you searching for a rhyming word to finish the next line of your song? Our lyrics generator...' — narzędzie do tworzenia własnych tekstów piosenek."},
+  {t:"Czytanie",q:"Which lyrics website lets users learn what lyrics mean in different languages? (Czer. 2022 dod.)",o:["A. LyricsAtoZ.com","B. lyricstraining.com","C. song-machine.org.uk"],c:0,e:"LyricsAtoZ (A): 'The text of the song can be translated into Spanish, German, French and a few other languages' — tłumaczenia tekstów na inne języki."},
+  // Zadanie 11 — word choice (Oscar Gift Bags)
+  {t:"Słownictwo",q:"They won't _____ the ceremony with empty hands. (Oscar Gift Bags, Czer. 2022 dod.)",o:["A. amazed","B. expensive","C. included","D. leave","E. take"],c:3,e:"LEAVE the ceremony = opuścić ceremonię. 'Won't leave with empty hands' = nie wyjdą z pustymi rękami. TAKE też znaczy wziąć ale tu chodzi o opuszczenie miejsca — LEAVE jest poprawne."},
+  {t:"Słownictwo",q:"They get very special bags with _____ gifts inside. (Oscar Gift Bags, Czer. 2022 dod.)",o:["A. amazed","B. expensive","C. included","D. leave","E. take"],c:1,e:"EXPENSIVE gifts = drogie prezenty. Torba warta $100,000 — prezenty muszą być drogie. AMAZED = zdumiony (przymiotnik dla ludzi, nie rzeczy), INCLUDED = wliczony w cenę — nie pasuje."},
+  {t:"Słownictwo",q:"The gift bag _____ a coupon for a safari holiday and a helicopter tour. (Oscar Gift Bags, Czer. 2022 dod.)",o:["A. amazed","B. expensive","C. included","D. leave","E. take"],c:2,e:"INCLUDED = zawierała, wliczała w sobie. 'The bag included a coupon' = torba zawierała kupon. INCLUDE = zawierać (w środku). Czas przeszły: included."},
+  // Zadanie 12 — Megan (whose/so/since)
+  {t:"Zdania wzgl.",q:"Megan, a nine-year-old girl 12.1. _____ parents work at the station. (Czer. 2022 dod.)",o:["A. whose","B. who","C. which"],c:0,e:"WHOSE = której (dzierżawcze). 'A girl WHOSE parents work' = dziewczynka, której rodzice pracują. WHO dotyczy osoby jako podmiotu, WHICH dotyczy rzeczy. WHOSE łączy osobę z jej posiadaniem."},
+  {t:"Słownictwo",q:"Hearing a child's voice is 12.2. _____ unusual that people listen more carefully. (Czer. 2022 dod.)",o:["A. such","B. so","C. as"],c:1,e:"SO + przymiotnik = tak (bardzo). 'SO unusual THAT' = tak niezwykłe, że. SUCH + rzeczownik: 'such an unusual thing'. Tu mamy sam przymiotnik (unusual) bez rzeczownika → SO."},
+  {t:"Przyimki",q:"The number of accidents has become smaller 12.3. _____ Megan's voice started to be used. (Czer. 2022 dod.)",o:["A. than","B. since","C. before"],c:1,e:"SINCE = od kiedy / od momentu gdy. 'Smaller SINCE Megan's voice started' = mniejsza od kiedy zaczęto używać głosu Megan. THAN = niż (porównanie), BEFORE = przed."},
+  // Zadanie 13 — sentence transformations
+  {t:"Czas przyszły",q:"Why (you / leave) _____ the party so early yesterday? (Czer. 2022 dod.)",o:["A. did you leave","B. have you left","C. do you leave","D. were you leaving"],c:0,e:"DID YOU LEAVE = dlaczego wyszedłeś? Past simple dla konkretnego zdarzenia w przeszłości (yesterday). 'Why did you leave?' = dlaczego wyszedłeś? HAVE YOU LEFT to present perfect — nie z 'yesterday'."},
+  {t:"Stopniowanie",q:"John Smith is (tall / person) _____ I've ever met. (Czer. 2022 dod.)",o:["A. the tallest person","B. a taller person than","C. so tall person","D. taller person"],c:0,e:"THE TALLEST PERSON = najwyższa osoba. Superlative (stopień najwyższy) z THE. Schemat: THE + -est + noun + I've ever met. 'I've ever met' zawsze wymaga superlatywu."},
+  {t:"Gerund/Inf.",q:"I want (catch / bus) _____ to Manchester. (Czer. 2022 dod.)",o:["A. to catch the bus","B. catching the bus","C. catch the bus","D. to catching the bus"],c:0,e:"WANT + TO + infinitive = chcieć coś zrobić. 'I want TO CATCH the bus' — po WANT zawsze bezokolicznik z TO. Nie gerund (-ing) i nie sama forma podstawowa."},
+];
+
+
+  // ── MAY 2022 (OJAP-100-2205, 26 maja 2022) ───────────────────────────────
+  // Zadanie 5 — situational responses
+  {t:"Zwroty",q:"Koledze zepsuła się drukarka. Jak zaoferujesz mu pomoc? (Maj 2022)",o:["A. Can I borrow your printer?","B. Would you like to use my printer?","C. Which printer did you break?"],c:1,e:"WOULD YOU LIKE TO = grzeczna oferta pomocy. 'Would you like to use my printer?' = Czy chciałbyś skorzystać z mojej drukarki? A to prośba o pożyczenie (odwrotna sytuacja), C to pytanie co zepsuł."},
+  {t:"Zwroty",q:"Koleżanka idzie na łyżwy. Jak zaproponujesz wspólne wyjście? (Maj 2022)",o:["A. Why don't we go skating together?","B. Do you know how to skate?","C. Are these your skates?"],c:0,e:"WHY DON'T WE + verb = propozycja wspólnego wyjścia. 'Why don't we go skating together?' = Może pójdziemy razem na łyżwy? B pyta o umiejętności, C o łyżwy — tylko A to propozycja."},
+  {t:"Zwroty",q:"Kolega prosi o pomoc w zadaniu. Jak mu odmówisz? (Maj 2022)",o:["A. I'm afraid that's not true.","B. Excuse me, but I don't know him.","C. I'm sorry, I don't know how to do it."],c:2,e:"I'M SORRY, I DON'T KNOW HOW TO DO IT = przepraszam, nie wiem jak to zrobić — grzeczna odmowa. A to zaprzeczenie czegoś, B mówi że go nie zna — zupełnie nie na temat."},
+  {t:"Zwroty",q:"Koleżanka mówi że czuje się lepiej. Jak wyrazisz zadowolenie? (Maj 2022)",o:["A. I hope you've enjoyed it.","B. I think I'm very well, thanks.","C. I'm glad to hear it."],c:2,e:"I'M GLAD TO HEAR IT = cieszę się że to słyszę — reakcja na dobrą wiadomość. A to reakcja po czymś przyjemnym (enjoyed), B mówi o sobie. Tylko C wyraża radość z cudzej poprawy zdrowia."},
+  // Zadanie 6 — gap fill
+  {t:"Pytania",q:"'It's the best comedy!' → 'Really? I 6.1. _____ so. The one we saw last week was much better.' (Maj 2022)",o:["A. don't think","B. didn't think","C. won't think","D. haven't thought"],c:0,e:"DON'T THINK SO = nie sądzę (tak). Present simple bo wyrażamy obecną opinię. 'I don't think so' = nie uważam tak / nie sądzę. Stała konstrukcja: I think so / I don't think so."},
+  {t:"Pytania",q:"'Your sister looks younger than you. 6.2. _____ she?' → 'Sixteen.' (Maj 2022)",o:["A. How old is","B. How old was","C. How old does","D. What age is"],c:0,e:"HOW OLD IS she? = ile ma lat? Odpowiedź 'Sixteen' = szesnaście. Present simple bo pytamy o obecny wiek. HOW OLD IS = standardowe pytanie o wiek osoby."},
+  // Zadanie 7 — reading comprehension
+  {t:"Czytanie",q:"Mum asks John to _____ (notatka: money for books, postman) (Maj 2022)",o:["A. order the books for her","B. give Dad money for the books","C. pay the postman for the books"],c:2,e:"Notatka: 'The postman will deliver the parcel. Could you please give him the money?' — mama prosi Johna żeby ZAPŁACIŁ LISTONOSZOWI za paczką z książkami. Tata zamówił, mama zostawiła pieniądze."},
+  {t:"Czytanie",q:"The TOP SECRET email was sent to _____ (Maj 2022)",o:["A. parents","B. teachers","C. students"],c:0,e:"Email mówi: 'if you want one for YOUR CHILD' i 'send a photo of your SON OR DAUGHTER' — adresowany do rodziców. Nauczyciele nie wiedzą (to niespodzianka), uczniowie też nie."},
+  {t:"Czytanie",q:"The author of the WHITE MOUNTAIN PATH text _____ (Maj 2022)",o:["A. recommends climbing in the mountains","B. offers some equipment for sale","C. gives some instructions"],c:2,e:"Tekst: 'Take this path ONLY if you...' + lista warunków + 'Turn back at first sign of bad weather' — to instrukcje/zasady bezpieczeństwa. Nie reklama sprzętu ani ogólna rekomendacja."},
+  {t:"Czytanie",q:"Mia writes about _____ (pamiętnik z Grecji, Maj 2022)",o:["A. a present she received in Greece","B. a change in the price of a product","C. a language problem she had when shopping"],c:1,e:"Mia: kolczyki były tanie, wróciła później i 'this time the earrings cost more than before' — cena się zmieniła. Nie problem językowy (sprzedawca mówił po angielsku), nie prezent (sama kupowała)."},
+  // Zadanie 8 — LEGO sentence insertion
+  {t:"Czytanie",q:"LEGO: 'Ole sold wood furniture. 8.1. _____ That's why Ole started making wooden toys.' Co pasuje?",o:["A. It was plastic bricks that children could connect to build little houses.","B. But times were hard and people didn't have much money for furniture.","C. Ole was born in Denmark in 1891.","D. A fire destroyed Ole's toy shop almost completely."],c:1,e:"B: Ole sprzedawał meble (8.0) → ALE CZASY BYŁY TRUDNE I LUDZIE NIE MIELI PIENIĘDZY NA MEBLE (8.1) → dlatego zaczął robić tańsze zabawki. 'That's why' łączy problem finansowy z decyzją."},
+  {t:"Czytanie",q:"LEGO: 'Zabawki były popularne. Ale wydarzyło się coś strasznego. 8.2. _____ But he didn't give up.' Co pasuje?",o:["A. It was plastic bricks that children could connect to build little houses.","B. But times were hard and people didn't have much money for furniture.","C. Ole was born in Denmark in 1891.","D. A fire destroyed Ole's toy shop almost completely."],c:3,e:"D: coś strasznego (8.1) → POŻAR ZNISZCZYŁ SKLEP PRAWIE CAŁKOWICIE (8.2) → ale się nie poddał. 'But he didn't give up' to bezpośrednia reakcja na katastrofę pożaru."},
+  {t:"Czytanie",q:"LEGO: 'Zaczął robić nowy rodzaj zabawki zwanej Lego. 8.3. _____ It was a huge success!' Co pasuje?",o:["A. It was plastic bricks that children could connect to build little houses.","B. But times were hard and people didn't have much money for furniture.","C. Ole was born in Denmark in 1891.","D. A fire destroyed Ole's toy shop almost completely."],c:0,e:"A: nowy rodzaj zabawki (8.2) → TO BYŁY MAŁE PLASTIKOWE KLOCKI KTÓRE DZIECI MOGŁY ŁĄCZYĆ (8.3) → ogromny sukces! Opis produktu logicznie następuje po wprowadzeniu nowej zabawki."},
+  // Zadanie 9 — courses matching
+  {t:"Czytanie",q:"Kursy: która oferta wymaga ukończenia innego kursu przed zapisaniem się? (A=Żonglerka, B=Rysowanie oczu, C=Fotografia) (Maj 2022)",o:["A. Żonglerka (Learn to Juggle)","B. Rysowanie oczu (How to Draw Eyes)","C. Fotografia (Take a Great Shot)"],c:1,e:"B (How to Draw Eyes): 'These classes are for people who have done the general course in face drawing FIRST' — wymagany wcześniejszy kurs. A i C są dla początkujących bez wymagań wstępnych."},
+  {t:"Czytanie",q:"Kursy: która oferta ma zajęcia tylko raz w tygodniu? (Maj 2022)",o:["A. Żonglerka (Learn to Juggle)","B. Rysowanie oczu (How to Draw Eyes)","C. Fotografia (Take a Great Shot)"],c:0,e:"A (Żonglerka): 'The lessons are on FRIDAYS at 7 p.m.' — tylko w piątki, raz w tygodniu. B ma zajęcia we wtorek I sobotę (dwa razy). C to kurs online — kiedy chcesz."},
+  {t:"Czytanie",q:"Kursy: w której ofercie możesz sam zdecydować kiedy zacząć? (Maj 2022)",o:["A. Żonglerka (Learn to Juggle)","B. Rysowanie oczu (How to Draw Eyes)","C. Fotografia (Take a Great Shot)"],c:2,e:"C (Fotografia): 'video lessons are already available, so when you get the password you can watch them WHENEVER YOU WANT' — sam decydujesz kiedy zaczynasz. A i B mają ustalone daty start."},
+  {t:"Czytanie",q:"Kursy: w której ofercie dowiesz się co kupić dopiero po pierwszych zajęciach? (Maj 2022)",o:["A. Żonglerka (Learn to Juggle)","B. Rysowanie oczu (How to Draw Eyes)","C. Fotografia (Take a Great Shot)"],c:1,e:"B (Rysowanie): 'Don't buy drawing paper and pencils BEFORE the course – during the FIRST LESSON we'll tell you what is necessary' — informacja o zakupach dopiero na pierwszej lekcji."},
+  // Zadanie 11 — word choice (Shopping)
+  {t:"Słownictwo",q:"Offline shopping is still the most _____ if you want to buy everyday groceries. (Maj 2022)",o:["A. bring","B. business","C. order","D. popular","E. product"],c:3,e:"POPULAR = popularne. 'The most popular' = najpopularniejszy. Superlatyw THE MOST + popular. Zakupy stacjonarne są nadal NAJPOPULARNIEJSZE przy zakupie codziennych produktów."},
+  {t:"Słownictwo",q:"You can _____ something online and pick it up from a shop in your area. (Maj 2022)",o:["A. bring","B. business","C. order","D. popular","E. product"],c:2,e:"ORDER something online = zamówić coś online. 'Order online and pick up in store' = zamów przez internet i odbierz w sklepie. To standard 'click and collect'. ORDER = zamówić."},
+  {t:"Słownictwo",q:"If you don't like a _____ you have bought online, you can return it to a shop. (Maj 2022)",o:["A. bring","B. business","C. order","D. popular","E. product"],c:4,e:"PRODUCT = produkt, towar. 'If you don't like a product you bought' = jeśli nie podoba Ci się produkt który kupiłeś. Możesz zwrócić go do sklepu stacjonarnego."},
+  // Zadanie 12 — Ice Cream for a Smile
+  {t:"Słownictwo",q:"Many people like ice cream, 12.1. _____ it is sweet and makes you smile. (Maj 2022)",o:["A. or","B. but","C. because"],c:2,e:"BECAUSE = ponieważ — spójnik przyczyny. 'People like it BECAUSE it is sweet' = ludzie lubią bo jest słodkie. OR = lub (alternatywa), BUT = ale (kontrast) — nie pasują do wyjaśnienia powodu."},
+  {t:"Stopniowanie",q:"You have to show 12.2. _____ smile you can possibly manage. (lody za uśmiech, Maj 2022)",o:["A. big","B. bigger","C. the biggest"],c:2,e:"THE BIGGEST smile = najszerszy możliwy uśmiech. Superlatyw z THE bo szukamy MAKSIMUM ('you can possibly manage' = jak tylko możesz). Tylko superlative wyraża 'jak największy'."},
+  {t:"Słownictwo",q:"It was 12.3. _____ a great hit that its producers are thinking about making more machines. (Maj 2022)",o:["A. such","B. what","C. so"],c:0,e:"SUCH + a + przymiotnik + rzeczownik = taki. 'Such a great hit' = taki wielki hit. Schemat: SUCH + a/an + adj + noun. SO użyjemy bez rzeczownika: 'It was SO great'. Tu mamy 'a great hit' (z rzeczownikiem) → SUCH."},
+  // Zadanie 13 — sentence transformations
+  {t:"Strona bierna",q:"Spiders don't frighten me → I _____ (AFRAID) spiders any more. (Maj 2022)",o:["A. am not afraid of","B. don't afraid of","C. am afraid of","D. not afraid of"],c:0,e:"AM NOT AFRAID OF = nie boję się. Zamiana: frighten me → I am afraid. BE AFRAID OF + noun/gerund. Przeczenie: am NOT afraid. 'Afraid' to przymiotnik, nie czasownik — nie używamy 'don't'."},
+  {t:"Stopniowanie",q:"The cheetah is the fastest animal → There's no animal _____ (AS) the cheetah. (Maj 2022)",o:["A. as fast as","B. so fast than","C. faster than","D. fast as"],c:0,e:"AS FAST AS = tak szybki jak. 'No animal as fast as the cheetah' = żadne zwierzę nie jest tak szybkie jak gepard. Schemat zaprzeczenia superlatywu: no + noun + as + adj + as. ZAWSZE: as...as (nie so...as)."},
+  {t:"Strona bierna",q:"People play football all over the world → Football _____ (PLAYED) all over the world. (Maj 2022)",o:["A. is played","B. was played","C. are played","D. has played"],c:0,e:"IS PLAYED = jest grane (strona bierna teraźniejsza). Football (singular) → IS. Strona bierna: BE + past participle. 'People play' → 'is played' — podmiot zmienia się z people na football."},
+]
+
+];
 
 function renderAccordion() {
   const list = document.getElementById('accordion-list');
