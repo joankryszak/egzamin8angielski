@@ -507,17 +507,18 @@
   </div>
   <div class="home-hero">
     <div class="home-title">Angielski na <span>E8</span> w pigułce</div>
-    <div class="home-sub">182 pytań z wyjaśnieniami po polsku. Oparty na arkuszach CKE 2025–2023.</div>
+    <div class="home-sub">197 pytań z wyjaśnieniami po polsku. Oparty na arkuszach CKE 2025–2023.</div>
   </div>
   <div class="home-stats">
-    <div class="stat-card"><div class="stat-num">182</div><div class="stat-lbl">Pytań</div></div>
+    <div class="stat-card"><div class="stat-num">197</div><div class="stat-lbl">Pytań</div></div>
     <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Tematów</div></div>
     <div class="stat-card"><div class="stat-num" id="home-done">0</div><div class="stat-lbl">Zaliczone</div></div>
   </div>
   <div class="topics-list" id="topics-list">
     <!-- rendered by JS -->
   </div>
-  <button class="start-all-btn" onclick="startAll()">Losuj wszystkie tematy →</button>
+  <button class="start-all-btn" onclick="startExamSession()">🎯 Sesja przed egzaminem — 30 pytań</button>
+  <button class="start-all-btn" onclick="startAll()" style="background:var(--white);color:var(--green);border:1.5px solid var(--green);margin-top:-4px;font-size:15px;padding:14px">Losuj wszystkie tematy →</button>
   <button class="pro-teaser-btn" id="pro-teaser-btn" onclick="openPaywall()">🔒 Odblokuj Egzamin8 Pro — wszystkie tematy</button>
 </div>
 
@@ -925,6 +926,30 @@ const TOPIC_META = [
     }
   },
   {
+    key: "Pewniaki",
+    name: "Pewniaki na egzaminie 🎯",
+    count: 15, free: false,
+    sciagawka: {
+      intro: "Te konstrukcje pojawiają się na KAŻDYM egzaminie E8. Opanuj je i masz pewne punkty! Wybrane na podstawie analizy arkuszy CKE z lat 2022–2026.",
+      sections: [
+        {
+          title: "🔥 Top 5 pewnych tematów",
+          rules: [
+            { text: "1. <code>was/were + past participle</code> = strona bierna przeszła", example: "The ship WAS LIFTED out of the sea." },
+            { text: "2. <code>mustn't</code> = zakaz | <code>don't have to</code> = brak obowiązku", example: "You MUSTN'T feed animals. / You DON'T HAVE TO hurry." },
+            { text: "3. <code>going to</code> = plan | <code>will</code> = spontaniczna decyzja", example: "Look! It's GOING TO rain. / I'll help you!" },
+            { text: "4. <code>whose</code> = zdanie względne dzierżawcze", example: "The girl WHOSE father bought her a wallet." },
+            { text: "5. <code>so + adj + that</code> | <code>such + a + noun + that</code>", example: "SO unusual THAT... / SUCH a great hit THAT..." },
+          ],
+          traps: [
+            "❌ MUSTN'T ≠ DON'T HAVE TO — to najczęstszy błąd na egzaminie!",
+            "❌ Po GOING TO → bezokolicznik bez TO: 'going to visit' nie 'going to to visit'",
+          ]
+        }
+      ]
+    }
+  },
+  {
     key: "Czytanie",
     name: "Rozumienie tekstów",
     count: 33, free: false,
@@ -1271,6 +1296,32 @@ function startAll() {
   startQuiz();
 }
 
+function startExamSession() {
+  if (!isPro) {
+    openPaywall();
+    return;
+  }
+  // Pick 30 questions: balanced across topics, weighted by exam frequency
+  const weights = {
+    'Strona bierna': 3, 'Gerund/Inf.': 3, 'Modalne': 2,
+    'Przyimki': 2, 'Stopniowanie': 2, 'Czas przyszły': 3,
+    'Zdania wzgl.': 2, 'Zwroty': 3, 'Pytania': 1,
+    'Słownictwo': 2, 'Zdania warunk.': 1, 'Czytanie': 4, 'Pewniaki': 2
+  };
+  let selected = [];
+  for (const [topic, count] of Object.entries(weights)) {
+    const topicQs = shuffle(QUESTIONS.filter(q => q.t === topic));
+    selected = selected.concat(topicQs.slice(0, count));
+  }
+  // Fill up to 30 if needed
+  if (selected.length < 30) {
+    const remaining = shuffle(QUESTIONS.filter(q => !selected.includes(q)));
+    selected = selected.concat(remaining.slice(0, 30 - selected.length));
+  }
+  currentQuestions = shuffle(selected).slice(0, 30);
+  startQuiz();
+}
+
 function startQuiz() {
   currentIndex = 0;
   score = 0;
@@ -1489,6 +1540,25 @@ const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬'
   {t:"Strona bierna",q:"Spiders don't frighten me → I _____ (AFRAID) spiders any more. (Maj 2022)",o:["A. am not afraid of","B. don't afraid of","C. am afraid of","D. not afraid of"],c:0,e:"AM NOT AFRAID OF = nie boję się. Zamiana: frighten me → I am afraid. BE AFRAID OF + noun/gerund. Przeczenie: am NOT afraid. 'Afraid' to przymiotnik, nie czasownik — nie używamy 'don't'."},
   {t:"Stopniowanie",q:"The cheetah is the fastest animal → There's no animal _____ (AS) the cheetah. (Maj 2022)",o:["A. as fast as","B. so fast than","C. faster than","D. fast as"],c:0,e:"AS FAST AS = tak szybki jak. 'No animal as fast as the cheetah' = żadne zwierzę nie jest tak szybkie jak gepard. Schemat zaprzeczenia superlatywu: no + noun + as + adj + as. ZAWSZE: as...as (nie so...as)."},
   {t:"Strona bierna",q:"People play football all over the world → Football _____ (PLAYED) all over the world. (Maj 2022)",o:["A. is played","B. was played","C. are played","D. has played"],c:0,e:"IS PLAYED = jest grane (strona bierna teraźniejsza). Football (singular) → IS. Strona bierna: BE + past participle. 'People play' → 'is played' — podmiot zmienia się z people na football."},
+]
+
+
+  // ── PEWNIAKI NA EGZAMINIE 🎯 (najczęstsze typy z arkuszy CKE 2022–2026) ──
+  {t:"Pewniaki",q:"🎯 PEWNIAK: The Eiffel Tower _____ in Paris in 1889. (strona bierna)",o:["A. built","B. was built","C. has built","D. is building"],c:1,e:"WAS BUILT = została zbudowana (strona bierna przeszła). EVERY paper ma stronę bierną! Schemat: was/were + past participle. 'Built' to 3. forma od 'build'."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: You _____ wear a uniform at this school — it's not required. (modalny)",o:["A. mustn't","B. don't have to","C. can't","D. shouldn't"],c:1,e:"DON'T HAVE TO = nie musisz (brak obowiązku). MUSTN'T = zakaz (nie wolno). To najczęstszy błąd na E8! 'Not required' = niewymagane → brak obowiązku → DON'T HAVE TO."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: You _____ touch the exhibits — it's strictly forbidden! (modalny)",o:["A. don't have to","B. shouldn't","C. mustn't","D. needn't"],c:2,e:"MUSTN'T = zakaz, nie wolno. 'Strictly forbidden' = surowo zabronione → zakaz → MUSTN'T. DON'T HAVE TO = brak obowiązku (możesz ale nie musisz) — zupełnie inne znaczenie!"},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: Look at those clouds! It _____ rain. (czas przyszły)",o:["A. will","B. is going to","C. would","D. shall"],c:1,e:"GOING TO = plan/przewidywanie na podstawie dowodów. 'Look at those clouds' = widzisz chmury → masz dowód → GOING TO. WILL = spontaniczna decyzja lub opinia bez dowodów."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: The woman _____ cat won first prize was very happy. (zdanie względne)",o:["A. who","B. which","C. whose","D. where"],c:2,e:"WHOSE = której (dzierżawcze). 'The woman WHOSE cat won' = kobieta, której kot wygrał. WHOSE łączy osobę z jej posiadaniem. WHO = osoba jako podmiot, WHICH = rzecz."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: The film was _____ boring that I fell asleep. (so/such)",o:["A. such","B. so","C. very","D. too"],c:1,e:"SO + przymiotnik + THAT = tak...że. 'SO boring THAT I fell asleep' = tak nudny że zasnąłem. SUCH + a + rzeczownik: 'such a boring film'. Tu sam przymiotnik (boring) bez rzeczownika → SO."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: It was _____ a great concert that everyone cried. (so/such)",o:["A. so","B. such","C. very","D. too"],c:1,e:"SUCH + a + przymiotnik + rzeczownik + THAT. 'SUCH a great concert THAT' = taki wspaniały koncert że. Tu mamy rzeczownik 'concert' → SUCH a. SO użylibyśmy bez rzeczownika: 'SO great THAT'."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: I have been learning English _____ five years. (since/for)",o:["A. since","B. for","C. during","D. from"],c:1,e:"FOR + okres czasu = przez (jak długo). 'FOR five years' = przez pięć lat. SINCE + punkt w czasie: 'since 2019'. Zasada: FOR + number/period, SINCE + date/moment."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: She has been playing piano _____ she was six. (since/for)",o:["A. for","B. during","C. since","D. from"],c:2,e:"SINCE + punkt w czasie = od (kiedy). 'SINCE she was six' = od kiedy miała sześć lat. FOR + okres: 'for ten years'. 'She was six' to konkretny moment w przeszłości → SINCE."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: I'm interested _____ learning new languages. (przyimek + gerund)",o:["A. in learning","B. to learn","C. of learning","D. for learn"],c:0,e:"INTERESTED IN + gerund = zainteresowany czymś. Po przyimku IN zawsze gerund (-ing). Stały zwrot: interested IN doing. Nie 'interested to learn' ani 'interested of'."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: She is good _____ solving difficult problems. (przyimek + gerund)",o:["A. in solving","B. at solving","C. for solving","D. to solve"],c:1,e:"GOOD AT + gerund = dobry w czymś. Stały zwrot: good AT doing. Po AT zawsze gerund (-ing). 'Good at solving' = dobry w rozwiązywaniu. Nie 'good in' ani 'good for'."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: Would you like _____ to the cinema tonight? (gerund/inf.)",o:["A. going","B. to go","C. go","D. to going"],c:1,e:"WOULD YOU LIKE + TO + infinitive = czy chciałbyś? Prośba/oferta: WOULD LIKE TO DO. Nie gerund! 'Would you like going' jest błędne. LIKE (lubić) + gerund, ale WOULD LIKE (chciałbyś) + to + inf."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: The exam results _____ announced next Monday. (strona bierna przyszła)",o:["A. are going to announced","B. will announced","C. will be announced","D. are announced"],c:2,e:"WILL BE + past participle = strona bierna przyszła. 'Results WILL BE ANNOUNCED' = wyniki zostaną ogłoszone. Schemat: will + BE + pp. Nie 'will announced' (brak BE)!"},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: The man _____ we met yesterday is a famous actor. (zdanie względne)",o:["A. whose","B. which","C. who","D. where"],c:2,e:"WHO = który (dla osób). 'The man WHO we met' = mężczyzna którego spotkaliśmy. WHO/WHOM dla ludzi, WHICH dla rzeczy, WHOSE dla dzierżawczości, WHERE dla miejsc."},
+  {t:"Pewniaki",q:"🎯 PEWNIAK: Why don't _____ go to the new Italian restaurant? (zwrot)",o:["A. us","B. we","C. our","D. ours"],c:1,e:"WHY DON'T WE + verb = może pójdziemy? Propozycja wspólnego działania. Schemat: Why don't WE + bezokolicznik. 'Why don't we go' = może pójdziemy. Nie 'why don't us' — us to forma dopełnienia."},
 ]
 
 ];
