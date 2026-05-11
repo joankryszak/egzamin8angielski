@@ -1336,10 +1336,11 @@ function shuffle(arr) {
 }
 
 function startAll() {
-  const qs = isPro
-    ? QUESTIONS
-    : QUESTIONS.filter(q => FREE_TOPIC_KEYS.has(q.t));
-  currentQuestions = shuffle(qs);
+  if (!isPro) {
+    openPaywall();
+    return;
+  }
+  currentQuestions = shuffle(QUESTIONS);
   startQuiz();
 }
 
