@@ -1491,6 +1491,29 @@ function startTopicFromAccordion(idx) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
+
+// Check if user is returning from Stripe payment
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('pro') === 'true') {
+  isPro = true;
+  localStorage.setItem('e8_pro', '1');
+  // Clean URL
+  window.history.replaceState({}, document.title, window.location.pathname);
+  // Show success message after UI loads
+  setTimeout(() => {
+    const hero = document.querySelector('.home-hero');
+    if (hero) {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'background:var(--pro-light);color:var(--pro);border-radius:10px;padding:14px 16px;font-size:14px;font-weight:500;margin-top:12px;text-align:center;line-height:1.6';
+      msg.innerHTML = '🎉 <strong>Egzamin8 Pro odblokowany!</strong><br>Masz teraz dostęp do wszystkich 12 tematów!';
+      hero.appendChild(msg);
+      setTimeout(() => msg.remove(), 5000);
+    }
+    // Rebuild accordion with unlocked buttons
+    document.getElementById('accordion-list').innerHTML = '';
+  }, 100);
+}
+
 checkStreak();
 updateUI();
 </script>
