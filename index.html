@@ -1511,7 +1511,9 @@ function switchTab(tab) {
 }
 
 // ─── ACCORDION RENDERER ───────────────────────────────────────────────────────
-const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬','❓','🔤','🔀','📄'
+const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬','❓','🔤','🔀','🎯','📄'];
+
+const ACCORDION_QUESTIONS = [
   // ── JUNE 2022 ADDITIONAL (OJAP-100-2206, 15 czerwca 2022) ────────────────
   // Zadanie 5 — situational responses
   {t:"Zwroty",q:"Przychodzisz spóźniony na spotkanie z kolegą. Jak go przeprosisz? (Czer. 2022 dod.)",o:["A. Sorry, you're too late.","B. You should at least say sorry.","C. I'm so sorry for being late."],c:2,e:"I'M SO SORRY FOR BEING LATE = przepraszam że się spóźniłem. Gerund po FOR: sorry for BEING late. A mówi do rozmówcy że ON jest spóźniony, B to rada — tylko C to przeprosiny."},
@@ -1547,9 +1549,6 @@ const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬'
   {t:"Czas przyszły",q:"Why (you / leave) _____ the party so early yesterday? (Czer. 2022 dod.)",o:["A. did you leave","B. have you left","C. do you leave","D. were you leaving"],c:0,e:"DID YOU LEAVE = dlaczego wyszedłeś? Past simple dla konkretnego zdarzenia w przeszłości (yesterday). 'Why did you leave?' = dlaczego wyszedłeś? HAVE YOU LEFT to present perfect — nie z 'yesterday'."},
   {t:"Stopniowanie",q:"John Smith is (tall / person) _____ I've ever met. (Czer. 2022 dod.)",o:["A. the tallest person","B. a taller person than","C. so tall person","D. taller person"],c:0,e:"THE TALLEST PERSON = najwyższa osoba. Superlative (stopień najwyższy) z THE. Schemat: THE + -est + noun + I've ever met. 'I've ever met' zawsze wymaga superlatywu."},
   {t:"Gerund/Inf.",q:"I want (catch / bus) _____ to Manchester. (Czer. 2022 dod.)",o:["A. to catch the bus","B. catching the bus","C. catch the bus","D. to catching the bus"],c:0,e:"WANT + TO + infinitive = chcieć coś zrobić. 'I want TO CATCH the bus' — po WANT zawsze bezokolicznik z TO. Nie gerund (-ing) i nie sama forma podstawowa."},
-];
-
-
   // ── MAY 2022 (OJAP-100-2205, 26 maja 2022) ───────────────────────────────
   // Zadanie 5 — situational responses
   {t:"Zwroty",q:"Koledze zepsuła się drukarka. Jak zaoferujesz mu pomoc? (Maj 2022)",o:["A. Can I borrow your printer?","B. Would you like to use my printer?","C. Which printer did you break?"],c:1,e:"WOULD YOU LIKE TO = grzeczna oferta pomocy. 'Would you like to use my printer?' = Czy chciałbyś skorzystać z mojej drukarki? A to prośba o pożyczenie (odwrotna sytuacja), C to pytanie co zepsuł."},
@@ -1585,8 +1584,6 @@ const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬'
   {t:"Strona bierna",q:"Spiders don't frighten me → I _____ (AFRAID) spiders any more. (Maj 2022)",o:["A. am not afraid of","B. don't afraid of","C. am afraid of","D. not afraid of"],c:0,e:"AM NOT AFRAID OF = nie boję się. Zamiana: frighten me → I am afraid. BE AFRAID OF + noun/gerund. Przeczenie: am NOT afraid. 'Afraid' to przymiotnik, nie czasownik — nie używamy 'don't'."},
   {t:"Stopniowanie",q:"The cheetah is the fastest animal → There's no animal _____ (AS) the cheetah. (Maj 2022)",o:["A. as fast as","B. so fast than","C. faster than","D. fast as"],c:0,e:"AS FAST AS = tak szybki jak. 'No animal as fast as the cheetah' = żadne zwierzę nie jest tak szybkie jak gepard. Schemat zaprzeczenia superlatywu: no + noun + as + adj + as. ZAWSZE: as...as (nie so...as)."},
   {t:"Strona bierna",q:"People play football all over the world → Football _____ (PLAYED) all over the world. (Maj 2022)",o:["A. is played","B. was played","C. are played","D. has played"],c:0,e:"IS PLAYED = jest grane (strona bierna teraźniejsza). Football (singular) → IS. Strona bierna: BE + past participle. 'People play' → 'is played' — podmiot zmienia się z people na football."},
-]
-
 
   // ── PEWNIAKI NA EGZAMINIE 🎯 (najczęstsze typy z arkuszy CKE 2022–2026) ──
   {t:"Pewniaki",q:"🎯 PEWNIAK: The Eiffel Tower _____ in Paris in 1889. (strona bierna)",o:["A. built","B. was built","C. has built","D. is building"],c:1,e:"WAS BUILT = została zbudowana (strona bierna przeszła). EVERY paper ma stronę bierną! Schemat: was/were + past participle. 'Built' to 3. forma od 'build'."},
@@ -1604,8 +1601,6 @@ const TOPIC_ICONS = ['✏️','🔧','⚠️','📌','📊','📅','🔗','💬'
   {t:"Pewniaki",q:"🎯 PEWNIAK: The exam results _____ announced next Monday. (strona bierna przyszła)",o:["A. are going to announced","B. will announced","C. will be announced","D. are announced"],c:2,e:"WILL BE + past participle = strona bierna przyszła. 'Results WILL BE ANNOUNCED' = wyniki zostaną ogłoszone. Schemat: will + BE + pp. Nie 'will announced' (brak BE)!"},
   {t:"Pewniaki",q:"🎯 PEWNIAK: The man _____ we met yesterday is a famous actor. (zdanie względne)",o:["A. whose","B. which","C. who","D. where"],c:2,e:"WHO = który (dla osób). 'The man WHO we met' = mężczyzna którego spotkaliśmy. WHO/WHOM dla ludzi, WHICH dla rzeczy, WHOSE dla dzierżawczości, WHERE dla miejsc."},
   {t:"Pewniaki",q:"🎯 PEWNIAK: Why don't _____ go to the new Italian restaurant? (zwrot)",o:["A. us","B. we","C. our","D. ours"],c:1,e:"WHY DON'T WE + verb = może pójdziemy? Propozycja wspólnego działania. Schemat: Why don't WE + bezokolicznik. 'Why don't we go' = może pójdziemy. Nie 'why don't us' — us to forma dopełnienia."},
-]
-
 ];
 
 function renderAccordion() {
